@@ -36,6 +36,8 @@ public class Test {
     checkInitData();
     Element iso3166 = Tools.loadDocument("data/iso3166.xml");
 
+    // Some quick point-test examples of each dataset.
+    
     InterpolatedPopulation ip2017 = new InterpolatedPopulation("data/wpp2017",iso3166);
     System.out.println("GBR, male, 1963, 25 = "+ip2017.get(25,"GBR", InterpolatedPopulation.MALE, 1963));
     System.out.println("UGA, Female, 2072, 72 = "+ip2017.get(72,"UGA", InterpolatedPopulation.FEMALE, 2072));    
@@ -65,8 +67,13 @@ public class Test {
                                                                com.vimc.demography.unwpp2017.Population.MEDIUM_VARIANT,2050));
     System.out.println("GBR, male, 2050, 25, high= "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
                                                                com.vimc.demography.unwpp2017.Population.HIGH_VARIANT,2050));
+    // And some dump examples.
     
-    ip2017.dump(System.out,null); // or replace the null with new String[] {"PAK","IND","ETH","NIG","COD"} for PINE+DRC countries.
+    ip2017.dump(System.out,new String[] {"PAK","IND","ETH","NIG","COD"}); // Pine countries.
+    ip2015.dump(System.out,null); // All countries     
+    ip2012.dump(System.out,null); // All countries
+    srab.dump(System.out, null);
+    
     
   }
 }

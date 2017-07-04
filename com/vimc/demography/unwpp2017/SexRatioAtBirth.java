@@ -1,6 +1,7 @@
 package com.vimc.demography.unwpp2017;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
@@ -122,7 +123,33 @@ public class SexRatioAtBirth {
       row_no++;   
     }
   }
+
   
+//  private int[] raw_data = new int[no_countries*no_year_points]; 
+
+  
+  public void dump(PrintStream p, String[] filter_countries) {
+    p.append("value\tdate_start\tdate_end\tprojection_variant\tcountry\n");
+    for (int i=0; i<no_countries; i++) {
+      String i3 = country_i3.get(i);
+      boolean pick_country = (filter_countries==null);
+      if (filter_countries!=null) {
+        for (int j=0; j<filter_countries.length; j++) {
+          if ((i3.equals(filter_countries[j])) || (country_a3.get(i).equals(filter_countries[j]))) {
+            pick_country=true;
+            j=filter_countries.length;
+          }
+        }
+      }
+      
+      if (pick_country) {
+        for (int y=1950; y<2100; y+=5) {
+          String proj=(y<2015)?"E":"M";
+          p.append(get(i3,y)+"\t"+y+"0701\t"+(y+5)+"0630\t"+proj+"\t"+i3+"\n");
+        }
+      }
+    }
+  }
    
   public SexRatioAtBirth(String path, Element _iso3166) throws Exception {
     country_a3 = new ArrayList<String>();
