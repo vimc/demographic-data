@@ -129,7 +129,7 @@ public class SexRatioAtBirth {
 
   
   public void dump(PrintStream p, String[] filter_countries) {
-    p.append("value\tdate_start\tdate_end\tprojection_variant\tcountry\n");
+    p.append("value,date_start,date_end,projection_variant,country\n");
     for (int i=0; i<no_countries; i++) {
       String i3 = country_i3.get(i);
       boolean pick_country = (filter_countries==null);
@@ -145,7 +145,7 @@ public class SexRatioAtBirth {
       if (pick_country) {
         for (int y=1950; y<2100; y+=5) {
           String proj=(y<2015)?"E":"M";
-          p.append(get(i3,y)+"\t"+y+"0701\t"+(y+5)+"0630\t"+proj+"\t"+i3+"\n");
+          p.append(get(i3,y)+","+y+"0701,"+(y+5)+"0630,"+proj+","+i3+"\n");
         }
       }
     }

@@ -10,6 +10,10 @@ import com.vimc.demography.tools.Tools;
 import com.vimc.demography.tools.VIMC_XLSXDocumentParser;
 import com.vimc.demography.tools.XLSXLineParser;
 
+/**
+ * @author wrh1
+ *
+ */
 public class Population {
   private static final int no_countries = 201;
   private static final int no_year_points_estimates = 14; // 1950-1955 until 2015-2010 are estimates
@@ -215,8 +219,10 @@ public class Population {
     }
   }
   
+  
+  
   public void dump(PrintStream p, String[] filter_countries, String[] filter_projections) {
-    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tgender\tcountry\n");
+    p.append("age_from,age_to,value,date_start,date_end,projection_variant,gender,country\n");
     for (int i=0; i<no_countries; i++) {
       String i3 = country_i3.get(i);
       boolean pick_country = (filter_countries==null);
@@ -244,15 +250,15 @@ public class Population {
           if (proj_estimates) {
             for (int y=1950; y<=1989; y+=5) {
               for (int a=0; a<=79; a+=5) {
-                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
+                p.append(a+","+(a+5)+","+get(a,i3,g,ESTIMATES,y)+","+y+"0701"+","+(y+5)+"0630,E,"+gg+","+i3+"\n");
               }
-              p.append("80\t120\t"+get(80,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
+              p.append("80,120,"+get(80,i3,g,ESTIMATES,y)+","+y+"0701"+","+(y+5)+"0630,E,"+gg+","+i3+"\n");
             }
             for (int y=1990; y<=2015; y+=5) {
               for (int a=0; a<=99; a+=5) {
-                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
+                p.append(a+","+(a+5)+","+get(a,i3,g,ESTIMATES,y)+","+y+"0701"+","+(y+5)+"0630,E,"+gg+","+i3+"\n");
               }
-              p.append("100\t120\t"+get(100,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
+              p.append("100,120,"+get(100,i3,g,ESTIMATES,y)+","+y+"0701"+","+(y+5)+"0630,E,"+gg+","+i3+"\n");
             }
           }
           
@@ -270,9 +276,9 @@ public class Population {
             if (dump_this_proj) {
               for (int y=2020; y<=2100; y+=5) {
                 for (int a=0; a<=99; a+=5) {
-                  p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,pcode,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj_codes[pcode]+"\t"+gg+"\t"+i3+"\n");
+                  p.append(a+","+(a+5)+","+get(a,i3,g,pcode,y)+","+y+"0701"+","+(y+5)+"0630,"+proj_codes[pcode]+","+gg+","+i3+"\n");
                 }
-                p.append("100\t120\t"+get(100,i3,g,pcode,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj_codes[pcode]+"\t"+gg+"\t"+i3+"\n");
+                p.append("100,120,"+get(100,i3,g,pcode,y)+","+y+"0701"+","+(y+5)+"0630,"+proj_codes[pcode]+","+gg+","+i3+"\n");
               }
             }
           }

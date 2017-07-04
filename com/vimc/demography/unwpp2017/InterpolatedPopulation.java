@@ -174,7 +174,7 @@ public class InterpolatedPopulation {
   }
   
   public void dump(PrintStream p, String[] filter_countries) {
-    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tgender\tcountry\n");
+    p.append("age_from,age_to,value,date_start,date_end,projection_variant,gender,country\n");
     for (int i=0; i<no_countries; i++) {
       String i3 = country_i3.get(i);
       boolean pick_country = (filter_countries==null);
@@ -192,16 +192,16 @@ public class InterpolatedPopulation {
           String gg = (g==0)?"B":(g==1)?"M":"F";
           for (int y=1950; y<=1989; y++) {
             for (int a=0; a<=79; a++) {
-              p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+gg+"\t"+i3+"\n");
+              p.append(a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701"+","+(y+1)+"0630,E,"+gg+","+i3+"\n");
             }
-            p.append("80\t120\t"+get(80,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+gg+"\t"+i3+"\n");
+            p.append("80,120,"+get(80,i3,g,y)+","+y+"0701"+","+(y+1)+"0630,E,"+gg+","+i3+"\n");
           }
           for (int y=1990; y<=2100; y++) {
             String proj=(y<=2015)?"E":"M";
             for (int a=0; a<=99; a++) {
-              p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+              p.append(a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701"+","+(y+1)+"0630,"+proj+","+gg+","+i3+"\n");
             }
-            p.append("100\t120\t"+get(100,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+            p.append("100,120,"+get(100,i3,g,y)+","+y+"0701"+","+(y+1)+"0630,"+proj+","+gg+","+i3+"\n");
           }
         }
       }

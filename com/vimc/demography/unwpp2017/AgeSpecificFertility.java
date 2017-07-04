@@ -178,7 +178,7 @@ public class AgeSpecificFertility {
   }
   
   public void dump(PrintStream p, String[] filter_countries, String[] filter_projections) {
-    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tcountry\n");
+    p.append("age_from,age_to,value,date_start,date_end,projection_variant,country\n");
     for (int i=0; i<no_countries; i++) {
       String i3 = country_i3.get(i);
       boolean pick_country = (filter_countries==null);
@@ -204,7 +204,7 @@ public class AgeSpecificFertility {
         if (proj_estimates) {
           for (int y=1950; y<2015; y+=5) {
             for (int a=15; a<=45; a+=5) {
-              p.append(a+"\t"+(a+5)+"\t"+get(a,i3,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+i3+"\n");
+              p.append(a+","+(a+5)+","+get(a,i3,ESTIMATES,y)+","+y+"0701"+","+(y+5)+"0630,E,"+i3+"\n");
             }
           }
         }
@@ -223,7 +223,7 @@ public class AgeSpecificFertility {
           if (dump_this_proj) {
             for (int y=2015; y<2100; y+=5) {
               for (int a=15; a<=45; a+=5) {
-                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,pcode,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj_codes[pcode]+"\t"+i3+"\n");
+                p.append(a+","+(a+5)+","+get(a,i3,pcode,y)+","+y+"0701"+","+(y+5)+"0630,"+proj_codes[pcode]+","+i3+"\n");
               }
             }
           }
