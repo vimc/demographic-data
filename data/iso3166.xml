@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<data name="iso3166">
+  <c n3="004" c3="AFG" n="Afghanistan"/>
+  <c n3="248" c3="ALA" n="Aland Islands"/>
+  <c n3="008" c3="ALB" n="Albania"/>
+  <c n3="012" c3="DZA" n="Algeria"/>
+  <c n3="016" c3="ASM" n="American Samoa"/>
+  <c n3="020" c3="AND" n="Andorra"/>
+  <c n3="024" c3="AGO" n="Angola"/>
+  <c n3="660" c3="AIA" n="Anguilla"/>
+  <c n3="010" c3="ATA" n="Antarctica"/>
+  <c n3="028" c3="ATG" n="Antigua and Barbuda"/>
+  <c n3="032" c3="ARG" n="Argentina"/>
+  <c n3="051" c3="ARM" n="Armenia"/>
+  <c n3="533" c3="ABW" n="Aruba"/>
+  <c n3="036" c3="AUS" n="Australia"/>
+  <c n3="040" c3="AUT" n="Austria"/>
+  <c n3="031" c3="AZE" n="Azerbaijan"/>
+  <c n3="044" c3="BHS" n="Bahamas"/>
+  <c n3="048" c3="BHR" n="Bahrain"/>
+  <c n3="050" c3="BGD" n="Bangladesh"/>
+  <c n3="052" c3="BRB" n="Barbados"/>
+  <c n3="112" c3="BLR" n="Belarus"/>
+  <c n3="056" c3="BEL" n="Belgium"/>
+  <c n3="084" c3="BLZ" n="Belize"/>
+  <c n3="204" c3="BEN" n="Benin"/>
+  <c n3="060" c3="BMU" n="Bermuda"/>
+  <c n3="064" c3="BTN" n="Bhutan"/>
+  <c n3="068" c3="BOL" n="Bolivia, Plurinational State of"/>
+  <c n3="535" c3="BES" n="Bonaire, Sint Eustatius and Saba"/>
+  <c n3="070" c3="BIH" n="Bosnia and Herzegovina"/>
+  <c n3="072" c3="BWA" n="Botswana"/>
+  <c n3="074" c3="BVT" n="Bouvet Island"/>
+  <c n3="076" c3="BRA" n="Brazil"/>
+  <c n3="086" c3="IOT" n="British Indian Ocean Territory"/>
+  <c n3="096" c3="BRN" n="Brunei Darussalam"/>
+  <c n3="100" c3="BGR" n="Bulgaria"/>
+  <c n3="854" c3="BFA" n="Burkina Faso"/>
+  <c n3="108" c3="BDI" n="Burundi"/>
+  <c n3="132" c3="CPV" n="Cabo Verde"/>
+  <c n3="116" c3="KHM" n="Cambodia"/>
+  <c n3="120" c3="CMR" n="Cameroon"/>
+  <c n3="124" c3="CAN" n="Canada"/>
+  <c n3="136" c3="CYM" n="Cayman Islands"/>
+  <c n3="140" c3="CAF" n="Central African Republic"/>
+  <c n3="148" c3="TCD" n="Chad"/>
+  <c n3="830" c3="ZZZ" n="Channel Islands"/>
+  <c n3="152" c3="CHL" n="Chile"/>
+  <c n3="156" c3="CHN" n="China"/>
+  <c n3="162" c3="CXR" n="Christmas Island"/>
+  <c n3="166" c3="CCK" n="Cocos (Keeling) Islands"/>
+  <c n3="170" c3="COL" n="Colombia"/>
+  <c n3="174" c3="COM" n="Comoros"/>
+  <c n3="178" c3="COG" n="Congo"/>
+  <c n3="180" c3="COD" n="Congo, the Democratic Republic of the"/>
+  <c n3="184" c3="COK" n="Cook Islands"/>
+  <c n3="188" c3="CRI" n="Costa Rica"/>
+  <c n3="384" c3="CIV" n="Cote d'Ivoire"/>
+  <c n3="191" c3="HRV" n="Croatia"/>
+  <c n3="192" c3="CUB" n="Cuba"/>
+  <c n3="531" c3="CUW" n="Curacao"/>
+  <c n3="196" c3="CYP" n="Cyprus"/>
+  <c n3="203" c3="CZE" n="Czech Republic"/>
+  <c n3="208" c3="DNK" n="Denmark"/>
+  <c n3="262" c3="DJI" n="Djibouti"/>
+  <c n3="212" c3="DMA" n="Dominica"/>
+  <c n3="214" c3="DOM" n="Dominican Republic"/>
+  <c n3="218" c3="ECU" n="Ecuador"/>
+  <c n3="818" c3="EGY" n="Egypt"/>
+  <c n3="222" c3="SLV" n="El Salvador"/>
+  <c n3="226" c3="GNQ" n="Equatorial Guinea"/>
+  <c n3="232" c3="ERI" n="Eritrea"/>
+  <c n3="233" c3="EST" n="Estonia"/>
+  <c n3="231" c3="ETH" n="Ethiopia"/>
+  <c n3="238" c3="FLK" n="Falkland Islands (Malvinas)"/>
+  <c n3="234" c3="FRO" n="Faroe Islands"/>
+  <c n3="242" c3="FJI" n="Fiji"/>
+  <c n3="246" c3="FIN" n="Finland"/>
+  <c n3="250" c3="FRA" n="France"/>
+  <c n3="254" c3="GUF" n="French Guiana"/>
+  <c n3="258" c3="PYF" n="French Polynesia"/>
+  <c n3="260" c3="ATF" n="French Southern Territories"/>
+  <c n3="266" c3="GAB" n="Gabon"/>
+  <c n3="270" c3="GMB" n="Gambia"/>
+  <c n3="268" c3="GEO" n="Georgia"/>
+  <c n3="276" c3="DEU" n="Germany"/>
+  <c n3="288" c3="GHA" n="Ghana"/>
+  <c n3="292" c3="GIB" n="Gibraltar"/>
+  <c n3="300" c3="GRC" n="Greece"/>
+  <c n3="304" c3="GRL" n="Greenland"/>
+  <c n3="308" c3="GRD" n="Grenada"/>
+  <c n3="312" c3="GLP" n="Guadeloupe"/>
+  <c n3="316" c3="GUM" n="Guam"/>
+  <c n3="320" c3="GTM" n="Guatemala"/>
+  <c n3="831" c3="GGY" n="Guernsey"/>
+  <c n3="324" c3="GIN" n="Guinea"/>
+  <c n3="624" c3="GNB" n="Guinea-Bissau"/>
+  <c n3="328" c3="GUY" n="Guyana"/>
+  <c n3="332" c3="HTI" n="Haiti"/>
+  <c n3="334" c3="HMD" n="Heard Island and McDonald Islands"/>
+  <c n3="336" c3="VAT" n="Holy See (Vatican City State)"/>
+  <c n3="340" c3="HND" n="Honduras"/>
+  <c n3="344" c3="HKG" n="Hong Kong"/>
+  <c n3="348" c3="HUN" n="Hungary"/>
+  <c n3="352" c3="ISL" n="Iceland"/>
+  <c n3="356" c3="IND" n="India"/>
+  <c n3="360" c3="IDN" n="Indonesia"/>
+  <c n3="364" c3="IRN" n="Iran, Islamic Republic of"/>
+  <c n3="368" c3="IRQ" n="Iraq"/>
+  <c n3="372" c3="IRL" n="Ireland"/>
+  <c n3="833" c3="IMN" n="Isle of Man"/>
+  <c n3="376" c3="ISR" n="Israel"/>
+  <c n3="380" c3="ITA" n="Italy"/>
+  <c n3="388" c3="JAM" n="Jamaica"/>
+  <c n3="392" c3="JPN" n="Japan"/>
+  <c n3="832" c3="JEY" n="Jersey"/>
+  <c n3="400" c3="JOR" n="Jordan"/>
+  <c n3="398" c3="KAZ" n="Kazakhstan"/>
+  <c n3="404" c3="KEN" n="Kenya"/>
+  <c n3="296" c3="KIR" n="Kiribati"/>
+  <c n3="408" c3="PRK" n="Korea, Democratic People's Republic of"/>
+  <c n3="410" c3="KOR" n="Korea, Republic of"/>
+  <c n3="414" c3="KWT" n="Kuwait"/>
+  <c n3="417" c3="KGZ" n="Kyrgyzstan"/>
+  <c n3="418" c3="LAO" n="Lao People's Democratic Republic"/>
+  <c n3="428" c3="LVA" n="Latvia"/>
+  <c n3="422" c3="LBN" n="Lebanon"/>
+  <c n3="426" c3="LSO" n="Lesotho"/>
+  <c n3="430" c3="LBR" n="Liberia"/>
+  <c n3="434" c3="LBY" n="Libya"/>
+  <c n3="438" c3="LIE" n="Liechtenstein"/>
+  <c n3="440" c3="LTU" n="Lithuania"/>
+  <c n3="442" c3="LUX" n="Luxembourg"/>
+  <c n3="446" c3="MAC" n="Macao"/>
+  <c n3="807" c3="MKD" n="Macedonia, the former Yugoslav Republic of"/>
+  <c n3="450" c3="MDG" n="Madagascar"/>
+  <c n3="454" c3="MWI" n="Malawi"/>
+  <c n3="458" c3="MYS" n="Malaysia"/>
+  <c n3="462" c3="MDV" n="Maldives"/>
+  <c n3="466" c3="MLI" n="Mali"/>
+  <c n3="470" c3="MLT" n="Malta"/>
+  <c n3="584" c3="MHL" n="Marshall Islands"/>
+  <c n3="474" c3="MTQ" n="Martinique"/>
+  <c n3="478" c3="MRT" n="Mauritania"/>
+  <c n3="480" c3="MUS" n="Mauritius"/>
+  <c n3="175" c3="MYT" n="Mayotte"/>
+  <c n3="484" c3="MEX" n="Mexico"/>
+  <c n3="583" c3="FSM" n="Micronesia, Federated States of"/>
+  <c n3="498" c3="MDA" n="Moldova, Republic of"/>
+  <c n3="492" c3="MCO" n="Monaco"/>
+  <c n3="496" c3="MNG" n="Mongolia"/>
+  <c n3="499" c3="MNE" n="Montenegro"/>
+  <c n3="500" c3="MSR" n="Montserrat"/>
+  <c n3="504" c3="MAR" n="Morocco"/>
+  <c n3="508" c3="MOZ" n="Mozambique"/>
+  <c n3="104" c3="MMR" n="Myanmar"/>
+  <c n3="516" c3="NAM" n="Namibia"/>
+  <c n3="520" c3="NRU" n="Nauru"/>
+  <c n3="524" c3="NPL" n="Nepal"/>
+  <c n3="528" c3="NLD" n="Netherlands"/>
+  <c n3="540" c3="NCL" n="New Caledonia"/>
+  <c n3="554" c3="NZL" n="New Zealand"/>
+  <c n3="558" c3="NIC" n="Nicaragua"/>
+  <c n3="562" c3="NER" n="Niger"/>
+  <c n3="566" c3="NGA" n="Nigeria"/>
+  <c n3="570" c3="NIU" n="Niue"/>
+  <c n3="574" c3="NFK" n="Norfolk Island"/>
+  <c n3="580" c3="MNP" n="Northern Mariana Islands"/>
+  <c n3="578" c3="NOR" n="Norway"/>
+  <c n3="512" c3="OMN" n="Oman"/>
+  <c n3="586" c3="PAK" n="Pakistan"/>
+  <c n3="585" c3="PLW" n="Palau"/>
+  <c n3="275" c3="PSE" n="Palestine, State of"/>
+  <c n3="591" c3="PAN" n="Panama"/>
+  <c n3="598" c3="PNG" n="Papua New Guinea"/>
+  <c n3="600" c3="PRY" n="Paraguay"/>
+  <c n3="604" c3="PER" n="Peru"/>
+  <c n3="608" c3="PHL" n="Philippines"/>
+  <c n3="612" c3="PCN" n="Pitcairn"/>
+  <c n3="616" c3="POL" n="Poland"/>
+  <c n3="620" c3="PRT" n="Portugal"/>
+  <c n3="630" c3="PRI" n="Puerto Rico"/>
+  <c n3="634" c3="QAT" n="Qatar"/>
+  <c n3="638" c3="REU" n="Reunion"/>
+  <c n3="642" c3="ROU" n="Romania"/>
+  <c n3="643" c3="RUS" n="Russian Federation"/>
+  <c n3="646" c3="RWA" n="Rwanda"/>
+  <c n3="652" c3="BLM" n="Saint Barthelemy"/>
+  <c n3="654" c3="SHN" n="Saint Helena, Ascension and Tristan da Cunha"/>
+  <c n3="659" c3="KNA" n="Saint Kitts and Nevis"/>
+  <c n3="662" c3="LCA" n="Saint Lucia"/>
+  <c n3="663" c3="MAF" n="Saint Martin (French part)"/>
+  <c n3="666" c3="SPM" n="Saint Pierre and Miquelon"/>
+  <c n3="670" c3="VCT" n="Saint Vincent and the Grenadines"/>
+  <c n3="882" c3="WSM" n="Samoa"/>
+  <c n3="674" c3="SMR" n="San Marino"/>
+  <c n3="678" c3="STP" n="Sao Tome and Principe"/>
+  <c n3="682" c3="SAU" n="Saudi Arabia"/>
+  <c n3="686" c3="SEN" n="Senegal"/>
+  <c n3="688" c3="SRB" n="Serbia"/>
+  <c n3="690" c3="SYC" n="Seychelles"/>
+  <c n3="694" c3="SLE" n="Sierra Leone"/>
+  <c n3="702" c3="SGP" n="Singapore"/>
+  <c n3="534" c3="SXM" n="Sint Maarten (Dutch part)"/>
+  <c n3="703" c3="SVK" n="Slovakia"/>
+  <c n3="705" c3="SVN" n="Slovenia"/>
+  <c n3="090" c3="SLB" n="Solomon Islands"/>
+  <c n3="706" c3="SOM" n="Somalia"/>
+  <c n3="710" c3="ZAF" n="South Africa"/>
+  <c n3="239" c3="SGS" n="South Georgia and the South Sandwich Islands"/>
+  <c n3="728" c3="SSD" n="South Sudan"/>
+  <c n3="724" c3="ESP" n="Spain"/>
+  <c n3="144" c3="LKA" n="Sri Lanka"/>
+  <c n3="729" c3="SDN" n="Sudan"/>
+  <c n3="740" c3="SUR" n="Suriname"/>
+  <c n3="741" c3="SJM" n="Svalbard and Jan Mayen"/>
+  <c n3="748" c3="SWZ" n="Swaziland"/>
+  <c n3="752" c3="SWE" n="Sweden"/>
+  <c n3="756" c3="CHE" n="Switzerland"/>
+  <c n3="760" c3="SYR" n="Syrian Arab Republic"/>
+  <c n3="158" c3="TWN" n="Taiwan, Province of China"/>
+  <c n3="762" c3="TJK" n="Tajikistan"/>
+  <c n3="834" c3="TZA" n="Tanzania, United Republic of"/>
+  <c n3="764" c3="THA" n="Thailand"/>
+  <c n3="626" c3="TLS" n="Timor-Leste"/>
+  <c n3="768" c3="TGO" n="Togo"/>
+  <c n3="772" c3="TKL" n="Tokelau"/>
+  <c n3="776" c3="TON" n="Tonga"/>
+  <c n3="780" c3="TTO" n="Trinidad and Tobago"/>
+  <c n3="788" c3="TUN" n="Tunisia"/>
+  <c n3="792" c3="TUR" n="Turkey"/>
+  <c n3="795" c3="TKM" n="Turkmenistan"/>
+  <c n3="796" c3="TCA" n="Turks and Caicos Islands"/>
+  <c n3="798" c3="TUV" n="Tuvalu"/>
+  <c n3="800" c3="UGA" n="Uganda"/>
+  <c n3="804" c3="UKR" n="Ukraine"/>
+  <c n3="784" c3="ARE" n="United Arab Emirates"/>
+  <c n3="826" c3="GBR" n="United Kingdom"/>
+  <c n3="581" c3="UMI" n="United States Minor Outlying Islands"/>
+  <c n3="840" c3="USA" n="United States of America"/>
+  <c n3="858" c3="URY" n="Uruguay"/>
+  <c n3="860" c3="UZB" n="Uzbekistan"/>
+  <c n3="548" c3="VUT" n="Vanuatu"/>
+  <c n3="862" c3="VEN" n="Venezuela, Bolivarian Republic of"/>
+  <c n3="704" c3="VNM" n="Viet Nam"/>
+  <c n3="092" c3="VGB" n="Virgin Islands, British"/>
+  <c n3="850" c3="VIR" n="Virgin Islands, U.S."/>
+  <c n3="876" c3="WLF" n="Wallis and Futuna"/>
+  <c n3="732" c3="ESH" n="Western Sahara"/>
+  <c n3="887" c3="YEM" n="Yemen"/>
+  <c n3="894" c3="ZMB" n="Zambia"/>
+  <c n3="716" c3="ZWE" n="Zimbabwe"/>
+</data>
