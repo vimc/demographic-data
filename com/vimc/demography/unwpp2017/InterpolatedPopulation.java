@@ -173,28 +173,40 @@ public class InterpolatedPopulation {
     }
   }
   
-  public void dump(PrintStream p) {
-    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tgender\tccountry\n");
+  public void dump(PrintStream p, String[] filter_countries) {
+    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tgender\tcountry\n");
     for (int i=0; i<no_countries; i++) {
       String i3 = country_i3.get(i);
-      for (byte g=0; g<no_genders; g++) {
-        for (int y=1950; y<=1989; y++) {
-          for (int a=0; a<=79; a++) {
-            p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+i3+"\n");
+      boolean pick_country = (filter_countries==null);
+      if (filter_countries!=null) {
+        for (int j=0; j<filter_countries.length; j++) {
+          if ((i3.equals(filter_countries[j])) || (country_a3.get(i).equals(filter_countries[j]))) {
+            pick_country=true;
+            j=filter_countries.length;
           }
-          p.append("80\t120\t"+get(80,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+i3+"\n");
         }
-        for (int y=1990; y<=2100; y++) {
-          String proj=(y<=2015)?"E":"M";
-          for (int a=0; a<=99; a++) {
-            p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+i3+"\n");
+      }
+      
+      if (pick_country) {
+        for (byte g=0; g<no_genders; g++) {
+          String gg = (g==0)?"B":(g==1)?"M":"F";
+          for (int y=1950; y<=1989; y++) {
+            for (int a=0; a<=79; a++) {
+              p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+gg+"\t"+i3+"\n");
+            }
+            p.append("80\t120\t"+get(80,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+gg+"\t"+i3+"\n");
           }
-          p.append("100\t120\t"+get(100,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+i3+"\n");
+          for (int y=1990; y<=2100; y++) {
+            String proj=(y<=2015)?"E":"M";
+            for (int a=0; a<=99; a++) {
+              p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+            }
+            p.append("100\t120\t"+get(100,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+          }
         }
       }
     }
   }
-  
    
   public InterpolatedPopulation(String path, Element _iso3166) throws Exception {
     country_a3 = new ArrayList<String>();
