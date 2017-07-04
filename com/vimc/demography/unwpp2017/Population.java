@@ -1,6 +1,7 @@
 package com.vimc.demography.unwpp2017;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
@@ -96,16 +97,16 @@ public class Population {
    private static String[] projection_names = new String[] {"ESTIMATES","MEDIUM VARIANT","HIGH VARIANT","LOW VARIANT","CONSTANT-FERTILITY",
                                                             "INSTANT-REPLACEMENT","MOMENTUM","ZERO-MIGRATION","CONSTANT-MORTALITY","NO CHANGE"};
    
-   public static final byte ESTIMATES=0;
-   public static final byte MEDIUM_VARIANT=1;
-   public static final byte HIGH_VARIANT=2;
-   public static final byte LOW_VARIANT=3;
-   public static final byte CONSTANT_FERTILITY=4;
-   public static final byte INSTANT_REPLACEMENT=5;
-   public static final byte MOMENTUM=6;
-   public static final byte ZERO_MIGRATION=7;
-   public static final byte CONSTANT_MORTALITY=8;
-   public static final byte NO_CHANGE=9;
+   public static final byte ESTIMATES=0;           // E
+   public static final byte MEDIUM_VARIANT=1;      // M
+   public static final byte HIGH_VARIANT=2;        // H
+   public static final byte LOW_VARIANT=3;         // L
+   public static final byte CONSTANT_FERTILITY=4;  // F
+   public static final byte INSTANT_REPLACEMENT=5; // I
+   public static final byte MOMENTUM=6;            // U
+   public static final byte ZERO_MIGRATION=7;      // Z
+   public static final byte CONSTANT_MORTALITY=8;  // C
+   public static final byte NO_CHANGE=9;           // N
    
    public final static byte BOTH_GENDER=0;
    public final static byte MALE=1;
@@ -163,7 +164,6 @@ public class Population {
           i=projection_names.length;
         }
       }
-      if (current_projection_id==-1) System.out.println("Ignoring sheet "+current_sheet);
     }
     
     public void parseLine(String s) {
@@ -214,6 +214,74 @@ public class Population {
       row_no++;   
     }
   }
+  
+  public void dump(PrintStream p, String[] filter_countries, String[] filter_projections) {
+    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tgender\tcountry\n");
+    for (int i=0; i<no_countries; i++) {
+      String i3 = country_i3.get(i);
+      boolean pick_country = (filter_countries==null);
+      if (filter_countries!=null) {
+        for (int j=0; j<filter_countries.length; j++) {
+          if ((i3.equals(filter_countries[j])) || (country_a3.get(i).equals(filter_countries[j]))) {
+            pick_country=true;
+            j=filter_countries.length;
+          }
+        }
+      }
+      
+      if (pick_country) {
+        for (byte g=0; g<no_genders; g++) {
+          String gg = (g==0)?"B":(g==1)?"M":"F";
+          boolean proj_estimates=(filter_projections==null);
+          if (filter_projections!=null) {
+            for (int k=0; k<filter_projections.length; k++) {
+              if (filter_projections[k].equals("E")) {
+                proj_estimates=true;
+                k=filter_projections.length;
+              }
+            }
+          }
+          if (proj_estimates) {
+            for (int y=1950; y<=1989; y+=5) {
+              for (int a=0; a<=79; a+=5) {
+                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
+              }
+              p.append("80\t120\t"+get(80,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
+            }
+            for (int y=1990; y<=2015; y+=5) {
+              String proj=(y<=2015)?"E":"M";
+              for (int a=0; a<=99; a+=5) {
+                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+              }
+              p.append("100\t120\t"+get(100,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+            }
+          }
+          
+          String[] proj_codes = new String[] {"E","M","H","L","F","I","U","Z","C","N"};
+          for (int pcode=1; pcode<proj_codes.length; pcode++) {
+            boolean dump_this_proj = (filter_projections==null);
+            if (filter_projections!=null) {
+              for (int k=0; k<filter_projections.length; k++) {
+                if (filter_projections[k].equals(proj_codes[pcode])) {
+                  dump_this_proj=true;
+                  k=filter_projections.length;
+                }
+              } 
+            }
+            if (dump_this_proj) {
+              for (int y=2020; y<=2100; y+=5) {
+                for (int a=0; a<=99; a+=5) {
+                  p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,pcode,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj_codes[pcode]+"\t"+gg+"\t"+i3+"\n");
+                }
+                p.append("100\t120\t"+get(100,i3,g,pcode,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj_codes[pcode]+"\t"+gg+"\t"+i3+"\n");
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
   
    
   public Population(String path, Element _iso3166) throws Exception {

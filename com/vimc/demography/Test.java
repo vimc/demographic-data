@@ -73,6 +73,7 @@ public class Test {
     ip2015.dump(System.out,null); // All countries     
     ip2012.dump(System.out,null); // All countries
     srab.dump(System.out, null);
+    p2017.dump(System.out, new String[] {"GBR"},  new String[] {"E","H","M","L"}); // Estimates, high, medium, low variant. (See Population.java for other codes)
     
     
   }
