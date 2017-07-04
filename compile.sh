@@ -1,0 +1,1 @@
+javac -classpath .:commons-collections4-4.1.jar:poi-3.16.jar:poi-ooxml-3.16.jar:poi-ooxml-schemas-3.16.jar:xmlbeans-2.5.0.jar com/vimc/demography/*.java com/vimc/demography/unwpp2012/*.java com/vimc/demography/unwpp2015/*.java com/vimc/demography/unwpp2017/*.java com/vimc/demography/tools/*.java
