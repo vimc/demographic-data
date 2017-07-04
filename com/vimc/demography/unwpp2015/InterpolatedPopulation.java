@@ -1,6 +1,7 @@
 package com.vimc.demography.unwpp2015;
 
 import java.io.File;
+import java.io.PrintStream;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
@@ -172,6 +173,27 @@ public class InterpolatedPopulation {
     }
   }
   
+  public void dump(PrintStream p) {
+    p.append("age_from\tage_to\tvalue\tdate_start\tdate_end\tprojection_variant\tgender\tccountry\n");
+    for (int i=0; i<no_countries; i++) {
+      String i3 = country_i3.get(i);
+      for (byte g=0; g<no_genders; g++) {
+        for (int y=1950; y<=1989; y++) {
+          for (int a=0; a<=79; a++) {
+            p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+i3+"\n");
+          }
+          p.append("80\t120\t"+get(80,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\tE\t"+i3+"\n");
+        }
+        for (int y=1990; y<=2100; y++) {
+          String proj=(y<=2015)?"E":"M";
+          for (int a=0; a<=99; a++) {
+            p.append(a+"\t"+(a+1)+"\t"+get(a,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+i3+"\n");
+          }
+          p.append("100\t120\t"+get(100,i3,g,y)+"\t"+y+"0701"+"\t"+(y+1)+"0630\t"+proj+"\t"+i3+"\n");
+        }
+      }
+    }
+  }
    
   public InterpolatedPopulation(String path, Element _iso3166) throws Exception {
     country_a3 = new ArrayList<String>();
