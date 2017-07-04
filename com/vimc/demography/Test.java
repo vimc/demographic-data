@@ -49,7 +49,7 @@ public class Test {
     System.out.println("GBR, 2045 = "+srab.get("GBR",2045));
     
     AgeSpecificFertility asf = new AgeSpecificFertility("data/wpp2017",iso3166);
-    System.out.println("GBR, 2045 = "+asf.get(25,"GBR",AgeSpecificFertility.MEDIUM_VARIANT,2030));
+    System.out.println("GBR, MED 2045 = "+asf.get(25,"GBR",AgeSpecificFertility.MEDIUM_VARIANT,2045));
     
     com.vimc.demography.unwpp2015.InterpolatedPopulation ip2015 = new com.vimc.demography.unwpp2015.InterpolatedPopulation("data/wpp2015",iso3166);
     System.out.println("GBR, male, 1963, 25 = "+ip2015.get(25,"GBR", com.vimc.demography.unwpp2015.InterpolatedPopulation.MALE, 1963));
@@ -66,14 +66,16 @@ public class Test {
     System.out.println("GBR, male, 2050, 25, med = "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
                                                                com.vimc.demography.unwpp2017.Population.MEDIUM_VARIANT,2050));
     System.out.println("GBR, male, 2050, 25, high= "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
-                                                               com.vimc.demography.unwpp2017.Population.HIGH_VARIANT,2050));
+                                                              com.vimc.demography.unwpp2017.Population.HIGH_VARIANT,2050));
     // And some dump examples.
+   
     
     ip2017.dump(System.out,new String[] {"PAK","IND","ETH","NIG","COD"}); // Pine countries.
     ip2015.dump(System.out,null); // All countries     
     ip2012.dump(System.out,null); // All countries
     srab.dump(System.out, null);
     p2017.dump(System.out, new String[] {"GBR"},  new String[] {"E","H","M","L"}); // Estimates, high, medium, low variant. (See Population.java for other codes)
+    asf.dump(System.out, new String[] {"GBR"},  new String[] {"E","H","M","L"}); // Estimates, high, medium, low variant. (See Population.java for other codes)
     
     
   }

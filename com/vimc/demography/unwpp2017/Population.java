@@ -249,11 +249,10 @@ public class Population {
               p.append("80\t120\t"+get(80,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
             }
             for (int y=1990; y<=2015; y+=5) {
-              String proj=(y<=2015)?"E":"M";
               for (int a=0; a<=99; a+=5) {
-                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+                p.append(a+"\t"+(a+5)+"\t"+get(a,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
               }
-              p.append("100\t120\t"+get(100,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\t"+proj+"\t"+gg+"\t"+i3+"\n");
+              p.append("100\t120\t"+get(100,i3,g,ESTIMATES,y)+"\t"+y+"0701"+"\t"+(y+5)+"0630\tE\t"+gg+"\t"+i3+"\n");
             }
           }
           
