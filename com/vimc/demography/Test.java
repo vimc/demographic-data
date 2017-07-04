@@ -76,7 +76,7 @@ public class Test {
     srab.dump(System.out, null);
     p2017.dump(System.out, new String[] {"GBR"},  new String[] {"E","H","M","L"}); // Estimates, high, medium, low variant. (See Population.java for other codes)
     asf.dump(System.out, new String[] {"GBR"},  new String[] {"E","H","M","L"}); // Estimates, high, medium, low variant. (See Population.java for other codes)
-    
+    idi.dump(System.out, new String[] {"GBR"},InterpolatedDemographicIndicators.LIFE_EXPECTANCY_AT_BIRTH_MALE);
     
   }
 }
