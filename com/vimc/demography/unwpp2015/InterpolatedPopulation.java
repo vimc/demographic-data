@@ -2,10 +2,13 @@ package com.vimc.demography.unwpp2015;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.w3c.dom.Element;
 
+import com.vimc.demography.db.MontaguDB;
 import com.vimc.demography.tools.Tools;
 import com.vimc.demography.tools.VIMC_XLSDocumentParser;
 import com.vimc.demography.tools.XLSXLineParser;
@@ -77,10 +80,6 @@ public class InterpolatedPopulation {
       "WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS",
       "WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS",
       "WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS"};
-    
-  public final static byte BOTH_GENDER=0;
-  public final static byte MALE=1;
-  public final static byte FEMALE=2;
   
   private final static String SHEET_ESTIMATES = "ESTIMATES";
   private final static String SHEET_MEDIUM = "MEDIUM VARIANT";
@@ -173,6 +172,52 @@ public class InterpolatedPopulation {
     }
   }
   
+  public void toSQL(Connection c, String[] filter_countries) {
+    try {
+      Statement stmt = c.createStatement();
+      for (int i=0; i<no_countries; i++) {
+        String i3 = country_i3.get(i);
+        boolean pick_country = (filter_countries==null);
+        if (filter_countries!=null) {
+          for (int j=0; j<filter_countries.length; j++) {
+            if ((i3.equals(filter_countries[j])) || (country_a3.get(i).equals(filter_countries[j]))) {
+              pick_country=true;
+              j=filter_countries.length;
+            }
+          }
+        }
+
+        if (pick_country) {
+          for (byte g=0; g<no_genders; g++) {
+            int gg = (g==0)?MontaguDB.GENDER_BOTH:(g==1)?MontaguDB.GENDER_MALE:MontaguDB.GENDER_FEMALE;
+            for (int y=1950; y<=1989; y++) {
+              System.out.println("2015: y="+y);
+              for (int a=0; a<=79; a++) {
+                stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
+                                   a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+MontaguDB.INTERPOLATED_POPULATION+","+MontaguDB.UNWPP_2015+")");
+              
+              }
+              stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
+                  "80,120,"+get(80,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+MontaguDB.INTERPOLATED_POPULATION+","+MontaguDB.UNWPP_2015+")");
+
+            }
+            for (int y=1990; y<=2100; y++) {
+              System.out.println("2015: y="+y);              
+              int proj=(y<=2015)?MontaguDB.UNWPP_ESTIMATES:MontaguDB.UNWPP_MEDIUM;
+              for (int a=0; a<=99; a++) {
+                stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
+                    a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+proj+","+MontaguDB.UNWPP_2015+")");
+
+              }
+              stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
+                  "100,120,"+get(100,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+proj+","+MontaguDB.UNWPP_2015+")");
+            }
+          }
+        }
+      } 
+    } catch (Exception e) { e.printStackTrace(); }
+  }
+
   public void dump(PrintStream p, String[] filter_countries) {
     p.append("age_from,age_to,value,date_start,date_end,projection_variant,gender,country\n");
     for (int i=0; i<no_countries; i++) {

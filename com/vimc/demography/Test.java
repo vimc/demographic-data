@@ -2,6 +2,7 @@ package com.vimc.demography;
 
 import org.w3c.dom.Element;
 
+import com.vimc.demography.db.MontaguDB;
 import com.vimc.demography.tools.Tools;
 import com.vimc.demography.unwpp2017.AgeSpecificFertility;
 import com.vimc.demography.unwpp2017.InterpolatedDemographicIndicators;
@@ -10,6 +11,7 @@ import com.vimc.demography.unwpp2017.SexRatioAtBirth;
 
 public class Test {
   Element iso3166;
+  MontaguDB d;
     
   public void checkInitData() throws Exception {
     Tools.ensureDirectoriesExist(new String[] {"data/wpp2012","data/wpp2015","data/wpp2017"});
@@ -36,8 +38,8 @@ public class Test {
     // Some quick point-test examples of each dataset.
     
     InterpolatedPopulation ip2017 = new InterpolatedPopulation("data/wpp2017",iso3166);
-    System.out.println("GBR, male, 1963, 25 = "+ip2017.get(25,"GBR", InterpolatedPopulation.MALE, 1963));
-    System.out.println("UGA, Female, 2072, 72 = "+ip2017.get(72,"UGA", InterpolatedPopulation.FEMALE, 2072));    
+    System.out.println("GBR, male, 1963, 25 = "+ip2017.get(25,"GBR", MontaguDB.GENDER_MALE, 1963));
+    System.out.println("UGA, Female, 2072, 72 = "+ip2017.get(72,"UGA", MontaguDB.GENDER_FEMALE, 2072));    
     
     InterpolatedDemographicIndicators idi = new InterpolatedDemographicIndicators("data/wpp2017",iso3166);
     System.out.println("GBR, life expect(0), 2015 = "+idi.get("GBR", InterpolatedDemographicIndicators.LIFE_EXPECTANCY_AT_BIRTH_MALE, 2015));
@@ -49,20 +51,20 @@ public class Test {
     System.out.println("GBR, MED 2045 = "+asf.get(25,"GBR",AgeSpecificFertility.MEDIUM_VARIANT,2045));
     
     com.vimc.demography.unwpp2015.InterpolatedPopulation ip2015 = new com.vimc.demography.unwpp2015.InterpolatedPopulation("data/wpp2015",iso3166);
-    System.out.println("GBR, male, 1963, 25 = "+ip2015.get(25,"GBR", com.vimc.demography.unwpp2015.InterpolatedPopulation.MALE, 1963));
-    System.out.println("UGA, Female, 2072, age 72 = "+ip2015.get(72,"UGA", com.vimc.demography.unwpp2015.InterpolatedPopulation.FEMALE, 2072));    
+    System.out.println("GBR, male, 1963, 25 = "+ip2015.get(25,"GBR", MontaguDB.GENDER_MALE, 1963));
+    System.out.println("UGA, Female, 2072, age 72 = "+ip2015.get(72,"UGA", MontaguDB.GENDER_FEMALE, 2072));    
 
     com.vimc.demography.unwpp2012.InterpolatedPopulation ip2012 = new com.vimc.demography.unwpp2012.InterpolatedPopulation("data/wpp2012",iso3166);
-    System.out.println("GBR, male, 1963, 25 = "+ip2012.get(25,"GBR", com.vimc.demography.unwpp2012.InterpolatedPopulation.MALE, 1963));
-    System.out.println("UGA, Female, 2072, 72 = "+ip2012.get(72,"UGA", com.vimc.demography.unwpp2012.InterpolatedPopulation.FEMALE, 2072));    
-    System.out.println("800 (=UGA), Female, 2072, 72 = "+ip2012.get(72,"800", com.vimc.demography.unwpp2012.InterpolatedPopulation.FEMALE, 2072));    
+    System.out.println("GBR, male, 1963, 25 = "+ip2012.get(25,"GBR", MontaguDB.GENDER_MALE, 1963));
+    System.out.println("UGA, Female, 2072, 72 = "+ip2012.get(72,"UGA", MontaguDB.GENDER_FEMALE, 2072));    
+    System.out.println("800 (=UGA), Female, 2072, 72 = "+ip2012.get(72,"800", MontaguDB.GENDER_FEMALE, 2072));    
 
     com.vimc.demography.unwpp2017.Population p2017 = new com.vimc.demography.unwpp2017.Population("data/wpp2017",iso3166);
-    System.out.println("GBR, male, 2050, 25, low = "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
+    System.out.println("GBR, male, 2050, 25, low = "+p2017.get(25,"GBR", MontaguDB.GENDER_MALE, 
                                                                com.vimc.demography.unwpp2017.Population.LOW_VARIANT,2050));
-    System.out.println("GBR, male, 2050, 25, med = "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
+    System.out.println("GBR, male, 2050, 25, med = "+p2017.get(25,"GBR", MontaguDB.GENDER_MALE, 
                                                                com.vimc.demography.unwpp2017.Population.MEDIUM_VARIANT,2050));
-    System.out.println("GBR, male, 2050, 25, high= "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
+    System.out.println("GBR, male, 2050, 25, high= "+p2017.get(25,"GBR", MontaguDB.GENDER_MALE, 
                                                                com.vimc.demography.unwpp2017.Population.HIGH_VARIANT,2050));
     // And some dump examples. 
    
@@ -77,15 +79,22 @@ public class Test {
     
   }
   
+  
   public Test() throws Exception {
     checkInitData();
     iso3166 = Tools.loadDocument("data/iso3166.xml");
+    d = new MontaguDB();
+    
   }
   
   public static void main(String[] args) throws Exception {
     Test t = new Test();
-    t.checkInitData();
-    t.exampleTests();
+    t.d.InitNew();
+    t.d.populate(t.iso3166);
+    t.d.test();
+    //t.testdb();
+   
+    //t.exampleTests();
   }
   
   
