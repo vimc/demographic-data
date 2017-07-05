@@ -9,8 +9,9 @@ import com.vimc.demography.unwpp2017.InterpolatedPopulation;
 import com.vimc.demography.unwpp2017.SexRatioAtBirth;
 
 public class Test {
-  
-  public static void checkInitData() throws Exception {
+  Element iso3166;
+    
+  public void checkInitData() throws Exception {
     Tools.ensureDirectoriesExist(new String[] {"data/wpp2012","data/wpp2015","data/wpp2017"});
     Tools.downloadFile("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls","data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls",true);
     Tools.downloadFile("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls","data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls",true);
@@ -30,12 +31,8 @@ public class Test {
     Tools.downloadFile("https://mrcdata.dide.ic.ac.uk/resources/iso3166.xml","data/iso3166.xml",true);
   }
   
-  
-  
-  public static void main(String[] args) throws Exception {
-    checkInitData();
-    Element iso3166 = Tools.loadDocument("data/iso3166.xml");
-
+  public void exampleTests() throws Exception {
+    
     // Some quick point-test examples of each dataset.
     
     InterpolatedPopulation ip2017 = new InterpolatedPopulation("data/wpp2017",iso3166);
@@ -79,4 +76,20 @@ public class Test {
     idi.dump(System.out, new String[] {"GBR"},InterpolatedDemographicIndicators.LIFE_EXPECTANCY_AT_BIRTH_MALE);
     
   }
+  
+  public Test() throws Exception {
+    checkInitData();
+    iso3166 = Tools.loadDocument("data/iso3166.xml");
+  }
+  
+  public static void main(String[] args) throws Exception {
+    Test t = new Test();
+    t.checkInitData();
+    t.exampleTests();
+  }
+  
+  
+  
+  
+  
 }
