@@ -205,8 +205,6 @@ public class InterpolatedPopulation {
 
             }
             for (int y=1990; y<=2100; y++) {
-              System.out.println("2012: y="+y);              
-                            
               int proj=(y<=2015)?MontaguDB.UNWPP_ESTIMATES:MontaguDB.UNWPP_MEDIUM;
               for (int a=0; a<=99; a++) {
                 stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+

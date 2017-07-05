@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import com.vimc.demography.tools.Tools;
 
 public class MontaguDB {
   
@@ -135,13 +138,14 @@ public class MontaguDB {
     return result;
   }
   
-  public void InitNew() throws Exception {
-    // Drops and rebuilds all the demographic tables
+  public void InitNew(Element iso3166) throws Exception {
+    //  Drops and rebuilds all the demographic tables
     createGendersTable();
     createProjectionsTable();
     createDataTypesTable();
     createSourcesTable();
     createDataTable();
+    createISO3166Table(iso3166);
   }
   
   public void populate(Element iso3166) throws Exception {
@@ -154,11 +158,31 @@ public class MontaguDB {
 
   }
   
+  public void createISO3166Table(Element iso3166) {
+    try {
+      Statement stmt = c.createStatement();
+      try { // Drop it if it already exists
+        stmt.execute("DROP TABLE iso3166");
+      } catch (Exception e) {}
+      stmt.executeUpdate("CREATE TABLE iso3166 (id int, c3 varchar(3), name varchar(255))");
+      int countTags = Tools.countChildren(iso3166, "c");
+      for (int i=0; i<countTags; i++) {
+        Node n = Tools.getChildNo(iso3166,"c",i);
+        String cname = Tools.getAttribute(n, "n");
+        cname=cname.replace("'","`");
+        stmt.executeUpdate("INSERT INTO iso3166 (id,c3,name) VALUES ("+Integer.parseInt(Tools.getAttribute(n,"n3"))+",'"+Tools.getAttribute(n, "c3")+"','"+cname+"')");
+      }
+      stmt.close();
+    } catch (Exception e) { e.printStackTrace(); }
+    
+    
+  }
+  
   public void test() throws Exception {
     Statement stmt = c.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * from demographic_statistic");
+    ResultSet rs = stmt.executeQuery("SELECT * from iso3166");
     while (rs.next()) {
-      System.out.println(rs.getInt("country")+","+rs.getInt("gender")+","+rs.getInt("age_from")+","+rs.getInt("age_to")+","+rs.getInt("value"));
+      System.out.println(rs.getString("name")+","+rs.getString("c3")+","+rs.getInt("id"));
     }
     rs.close();
     stmt.close();
