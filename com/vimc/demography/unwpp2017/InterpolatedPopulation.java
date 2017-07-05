@@ -21,8 +21,8 @@ public class InterpolatedPopulation {
   private static final int years_post_1990 = 111;
   private static final int no_genders = 3;
   
-  private int[] raw_data_pre_1990 = new int[no_countries*no_genders*years_pre_1990*age_size_pre_1990];
-  private int[] raw_data_post_1990 = new int[no_countries*no_genders*years_post_1990*age_size_post_1990];
+  private float[] raw_data_pre_1990 = new float[no_countries*no_genders*years_pre_1990*age_size_pre_1990];
+  private float[] raw_data_post_1990 = new float[no_countries*no_genders*years_post_1990*age_size_post_1990];
   
   private ArrayList<String> country_a3;     // ISO3166 ABC code for each country index 
   private ArrayList<String> country_i3;     // ISO3166 012 code for each country index
@@ -30,18 +30,20 @@ public class InterpolatedPopulation {
   
   
   
-  private void setDataUnchecked(byte gender, int c_index, int year, int age, int value) {
+  private void setDataUnchecked(byte gender, int c_index, int year, int age, float value) {
     if (year<1990) raw_data_pre_1990[age+((year-1950)*age_size_pre_1990)+(c_index*age_size_pre_1990*years_pre_1990)+(gender*age_size_pre_1990*years_pre_1990*no_countries)]=value;
     else raw_data_post_1990[age+((year-1990)*age_size_post_1990)+(c_index*age_size_post_1990*years_post_1990)+(gender*age_size_post_1990*years_post_1990*no_countries)]=value;
   }
   
-  private int getDataUnchecked(byte gender, int c_index, int year, int age) {
+  private float getDataUnchecked(byte gender, int c_index, int year, int age) {
     if (year<1990) return raw_data_pre_1990[age+((year-1950)*age_size_pre_1990)+(c_index*age_size_pre_1990*years_pre_1990)+(gender*age_size_pre_1990*years_pre_1990*no_countries)];
     else return raw_data_post_1990[age+((year-1990)*age_size_post_1990)+(c_index*age_size_post_1990*years_post_1990)+(gender*age_size_post_1990*years_post_1990*no_countries)];
   }
 
   
-  /**   The 2017 data for age-decomposed interpolated population is in three XLSX files.  
+  /**   The 2017 data for age-decomposed interpolated population is in three XLSX files.
+   *    In 1000s of people.
+   *      
    *    1950 - 2015 is in the "ESTIMATES" sheet
    *    2015 - 2100 is in the "MEDIUM VARIANT" sheet - note the duplication of 2015.
    *    In both sheets, data starts in row 17,  (counting from first row = 0 - add one if you're viewing in excel)
@@ -88,7 +90,7 @@ public class InterpolatedPopulation {
   private final static int XLSX_YEAR_COL = 5;  
   
 
-  public int get(int age, String c3, byte gender, int year) {
+  public float get(int age, String c3, byte gender, int year) {
     while (c3.length()<3) c3="0"+c3;
     c3=c3.toUpperCase();
     int c_index=-1;
@@ -151,18 +153,18 @@ public class InterpolatedPopulation {
             if (current_sheet.equals(SHEET_ESTIMATES)) {
               if (year<1990) {
                 for (int age=0; age<=80; age++)
-                  setDataUnchecked(gender,last_country_index,year,age,(int) (Float.parseFloat(bits[6+age])*1000.0f));
+                  setDataUnchecked(gender,last_country_index,year,age,Float.parseFloat(bits[6+age]));
             
               } else { // Skip "80+" column for 1990 and later.
                 for (int age=0; age<=79; age++) 
-                  setDataUnchecked(gender,last_country_index,year,age,(int) (Float.parseFloat(bits[6+age])*1000.0f));
+                  setDataUnchecked(gender,last_country_index,year,age,Float.parseFloat(bits[6+age]));
                 for (int age=80; age<=100; age++) 
-                  setDataUnchecked(gender,last_country_index,year,age,(int) (Float.parseFloat(bits[7+age])*1000.0f));
+                  setDataUnchecked(gender,last_country_index,year,age,Float.parseFloat(bits[7+age]));
               }
             } else { // Must be MEDIUM VARIANT sheet. year is always more than 1990 - no "80+" column.
 
               for (int age=0; age<=100; age++) 
-                setDataUnchecked(gender,last_country_index,year,age,(int) (Float.parseFloat(bits[6+age])*1000.0f));
+                setDataUnchecked(gender,last_country_index,year,age, Float.parseFloat(bits[6+age]));
                
             }
           }
@@ -189,10 +191,10 @@ public class InterpolatedPopulation {
         }
 
         if (pick_country) {
+          System.out.println("2017 ipop: "+i3+" "+country_a3.get(i));          
           for (byte g=0; g<no_genders; g++) {
             int gg = (g==0)?MontaguDB.GENDER_BOTH:(g==1)?MontaguDB.GENDER_MALE:MontaguDB.GENDER_FEMALE;
             for (int y=1950; y<=1989; y++) {
-              System.out.println("2015: y="+y);
               for (int a=0; a<=79; a++) {
                 stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
                                    a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+MontaguDB.INTERPOLATED_POPULATION+","+MontaguDB.UNWPP_2017+")");
@@ -203,15 +205,15 @@ public class InterpolatedPopulation {
 
             }
             for (int y=1990; y<=2100; y++) {
-              System.out.println("2015: y="+y);              
+            
               int proj=(y<=2015)?MontaguDB.UNWPP_ESTIMATES:MontaguDB.UNWPP_MEDIUM;
               for (int a=0; a<=99; a++) {
                 stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
-                    a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+proj+","+MontaguDB.UNWPP_2017+")");
+                    a+","+(a+1)+","+get(a,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+proj+","+gg+","+i3+","+MontaguDB.INTERPOLATED_POPULATION+","+MontaguDB.UNWPP_2017+")");
 
               }
               stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
-                  "100,120,"+get(100,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+MontaguDB.UNWPP_ESTIMATES+","+gg+","+i3+","+proj+","+MontaguDB.UNWPP_2017+")");
+                  "100,120,"+get(100,i3,g,y)+","+y+"0701,"+(y+1)+"0630,"+proj+","+gg+","+i3+","+MontaguDB.INTERPOLATED_POPULATION+","+MontaguDB.UNWPP_2017+")");
             }
           }
         }

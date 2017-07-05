@@ -13,19 +13,19 @@ import com.vimc.demography.tools.XLSXLineParser;
 public class SexRatioAtBirth {
   private static final int no_countries = 201;
   private static final int no_year_points = 30; // 1950-1955 until 2095-2100  
-  private int[] raw_data = new int[no_countries*no_year_points]; 
+  private float[] raw_data = new float[no_countries*no_year_points]; 
     
   private ArrayList<String> country_a3;     // ISO3166 ABC code for each country index 
   private ArrayList<String> country_i3;     // ISO3166 012 code for each country index
   private Element iso3166;                 // ISO3166 XML db.
     
-  private void setDataUnchecked(int c_index, int year, int value) {
+  private void setDataUnchecked(int c_index, int year, float value) {
     // eg, 1955 return 1955-1960, 
     year=(year-1950)/5;
     raw_data[(year)+(c_index*year)]=value;
   }
   
-  private int getDataUnchecked(int c_index, int year) {
+  private float getDataUnchecked(int c_index, int year) {
     year=(year-1950)/5;
     return raw_data[(year)+(c_index*year)];
   }
@@ -59,7 +59,7 @@ public class SexRatioAtBirth {
   private final static int FIRST_DATA_ROW = 17;
   private final static int XLSX_COUNTRY_COL = 4;
 
-  public int get(String c3, int year) {
+  public float get(String c3, int year) {
     while (c3.length()<3) c3="0"+c3;
     c3=c3.toUpperCase();
     int c_index=-1;
@@ -110,11 +110,11 @@ public class SexRatioAtBirth {
             // Deal with actual data. last_country_index will now be correctly set, either "-1" if we don't want this row, or the correct country index if we do.                
             if (current_sheet.equals(SHEET_ESTIMATES)) {
               for (int year=1950; year<=2010; year+=5) {
-                setDataUnchecked(last_country_index,year,(int) (Float.parseFloat(bits[((year-1950)/5)+5])*1000.0f));
+                setDataUnchecked(last_country_index,year,Float.parseFloat(bits[((year-1950)/5)+5]));
               }
             } else if (current_sheet.equals(SHEET_MEDIUM)) {
               for (int year=2015; year<=2095; year+=5) {
-                setDataUnchecked(last_country_index,year,(int) (Float.parseFloat(bits[((year-2015)/5)+5])*1000.0f));
+                setDataUnchecked(last_country_index,year,Float.parseFloat(bits[((year-2015)/5)+5]));
               }
             }
           }

@@ -89,9 +89,10 @@ public class Test {
   
   public static void main(String[] args) throws Exception {
     Test t = new Test();
+    //t.exampleTests();
     t.d.InitNew();
     t.d.populate(t.iso3166);
-    t.d.test();
+    //t.d.test();
     //t.testdb();
    
     //t.exampleTests();

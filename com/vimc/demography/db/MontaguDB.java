@@ -115,7 +115,7 @@ public class MontaguDB {
       try { // Drop it if it already exists
         stmt.execute("DROP TABLE demographic_statistic");
       } catch (Exception e) {}
-      stmt.executeUpdate("CREATE TABLE demographic_statistic (id SERIAL, age_from int, age_to int, value int, date_start int, "+
+      stmt.executeUpdate("CREATE TABLE demographic_statistic (id SERIAL, age_from int, age_to int, value real, date_start int, "+
                          "date_end int, projection_variant int, gender int, country int, source int, demographic_statistic_type int)");
       stmt.close();
     } catch (Exception e) { e.printStackTrace(); }
@@ -146,9 +146,12 @@ public class MontaguDB {
   
   public void populate(Element iso3166) throws Exception {
     com.vimc.demography.unwpp2015.InterpolatedPopulation ip2015 = new com.vimc.demography.unwpp2015.InterpolatedPopulation("data/wpp2015",iso3166);
-    ip2015.toSQL(c, new String[] {"GBR"});
+    ip2015.toSQL(c, null);
     com.vimc.demography.unwpp2012.InterpolatedPopulation ip2012 = new com.vimc.demography.unwpp2012.InterpolatedPopulation("data/wpp2012",iso3166);
-    ip2012.toSQL(c, new String[] {"GBR"});
+    ip2012.toSQL(c, null);
+    com.vimc.demography.unwpp2017.InterpolatedPopulation ip2017 = new com.vimc.demography.unwpp2017.InterpolatedPopulation("data/wpp2017",iso3166);
+    ip2017.toSQL(c, null);
+
   }
   
   public void test() throws Exception {

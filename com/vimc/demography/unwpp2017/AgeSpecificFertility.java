@@ -16,14 +16,14 @@ public class AgeSpecificFertility {
   private static final int no_year_points_projection = 17;
   private static final int no_projections = 9;
   private static final int no_age_points = 7;
-  private int[] raw_data_estimates = new int[no_countries*no_year_points_estimates*no_age_points];
-  private int[] raw_data_predictions = new int[no_countries*no_year_points_projection*no_projections*no_age_points];
+  private float[] raw_data_estimates = new float[no_countries*no_year_points_estimates*no_age_points];
+  private float[] raw_data_predictions = new float[no_countries*no_year_points_projection*no_projections*no_age_points];
     
   private ArrayList<String> country_a3;     // ISO3166 ABC code for each country index 
   private ArrayList<String> country_i3;     // ISO3166 012 code for each country index
   private Element iso3166;                 // ISO3166 XML db.
     
-  private void setDataUnchecked(int c_index, int age, int year, int projection, int value) {
+  private void setDataUnchecked(int c_index, int age, int year, int projection, float value) {
     age=(age-15)/5;
     if (year<2015) {
       year=(year-1950)/5;
@@ -37,7 +37,7 @@ public class AgeSpecificFertility {
     }
   }
   
-  private int getDataUnchecked(int c_index, int age, int year, int projection) {
+  private float getDataUnchecked(int c_index, int age, int year, int projection) {
     age=(age-15)/5;
     if (year<2015) {
       year=(year-1950)/5;
@@ -105,7 +105,7 @@ public class AgeSpecificFertility {
   private final static int FIRST_DATA_ROW = 17;
   private final static int XLSX_COUNTRY_COL = 4;
 
-  public int get(int age, String c3, int projection, int year) {
+  public float get(int age, String c3, int projection, int year) {
     while (c3.length()<3) c3="0"+c3;
     c3=c3.toUpperCase();
     int c_index=-1;
@@ -141,7 +141,6 @@ public class AgeSpecificFertility {
           i=projection_names.length;
         }
       }
-      if (current_projection_id==-1) System.out.println("Ignoring sheet "+current_sheet);
     }
     
     public void parseLine(String s) {
@@ -168,7 +167,7 @@ public class AgeSpecificFertility {
             // Deal with actual data. last_country_index will now be correctly set, either "-1" if we don't want this row, or the correct country index if we do.
             int year = Integer.parseInt(bits[5].split("-")[0]);
             for (int age=15; age<=45; age+=5) {
-              setDataUnchecked(last_country_index,age,year,current_projection_id,(int)(1000.0f*Float.parseFloat(bits[6+((age-15)/5)])));
+              setDataUnchecked(last_country_index,age,year,current_projection_id,Float.parseFloat(bits[6+((age-15)/5)]));
             }
           }
         }

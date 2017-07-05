@@ -21,14 +21,14 @@ public class Population {
   private static final int no_projections = 9;
   private static final int no_age_points = 21; // Actually only 17 for pre 1990, but let's not confuse things over that.
   private static final int no_genders = 3;
-  private int[] raw_data_estimates = new int[no_genders*no_countries*no_year_points_estimates*no_age_points];
-  private int[] raw_data_predictions = new int[no_genders*no_countries*no_year_points_projection*no_projections*no_age_points];
+  private float[] raw_data_estimates = new float[no_genders*no_countries*no_year_points_estimates*no_age_points];
+  private float[] raw_data_predictions = new float[no_genders*no_countries*no_year_points_projection*no_projections*no_age_points];
     
   private ArrayList<String> country_a3;     // ISO3166 ABC code for each country index 
   private ArrayList<String> country_i3;     // ISO3166 012 code for each country index
   private Element iso3166;                  // ISO3166 XML db.
     
-  private void setDataUnchecked(int gender, int c_index, int age, int year, int projection, int value) {
+  private void setDataUnchecked(int gender, int c_index, int age, int year, int projection, float value) {
     age=age/5;
     if (year<=2015) {
       year=(year-1950)/5;
@@ -44,7 +44,7 @@ public class Population {
     }
   }
   
-  private int getDataUnchecked(int gender, int c_index, int age, int year, int projection) {
+  private float getDataUnchecked(int gender, int c_index, int age, int year, int projection) {
     age=age/5;
     if (year<=2015) {
       year=(year-1950)/5;
@@ -62,7 +62,7 @@ public class Population {
 
   
   /**   The 2017 data for population with projection variants is in three XLSX files, one for each gender.
-   *    The resolution is 5-year time and 5-year age points, for all projections.  
+   *    The resolution is 5-year time and 5-year age points, for all projections, measured in 1000s. 
    *    1950 - 2015 is in the "ESTIMATES" sheet
    *    2015 - 2100 are in the other sheets, one for each variant. See list below.
    *    
@@ -112,10 +112,6 @@ public class Population {
    public static final byte CONSTANT_MORTALITY=8;  // C
    public static final byte NO_CHANGE=9;           // N
    
-   public final static byte BOTH_GENDER=0;
-   public final static byte MALE=1;
-   public final static byte FEMALE=2;
-
    private final static String[] xlsx_files = new String[] {
        "WPP2017_POP_F07_1_POPULATION_BY_AGE_BOTH_SEXES.XLSX",
        "WPP2017_POP_F07_2_POPULATION_BY_AGE_MALE.XLSX",
@@ -125,7 +121,7 @@ public class Population {
   private final static int XLSX_COUNTRY_COL = 4;
   private final static int XLSX_YEAR_COL = 5;
 
-  public int get(int age, String c3, int gender, int projection, int year) {
+  public float get(int age, String c3, int gender, int projection, int year) {
     while (c3.length()<3) c3="0"+c3;
     c3=c3.toUpperCase();
     int c_index=-1;
@@ -196,19 +192,19 @@ public class Population {
             if (current_sheet.equals(projection_names[ESTIMATES])) {
               if (year<1990) {
                 for (int age=0; age<=80; age+=5) {
-                  setDataUnchecked(gender,last_country_index,age,year,current_projection_id,(int)(1000.0f*Float.parseFloat(bits[6+(age/5)])));
+                  setDataUnchecked(gender,last_country_index,age,year,current_projection_id,Float.parseFloat(bits[6+(age/5)]));
                 }
               } else {
                 for (int age=0; age<=75; age+=5) {
-                  setDataUnchecked(gender,last_country_index,age,year,current_projection_id,(int)(1000.0f*Float.parseFloat(bits[6+(age/5)])));
+                  setDataUnchecked(gender,last_country_index,age,year,current_projection_id,Float.parseFloat(bits[6+(age/5)]));
                 }
                 for (int age=80; age<=100; age+=5) {
-                  setDataUnchecked(gender,last_country_index,age,year,current_projection_id,(int)(1000.0f*Float.parseFloat(bits[7+(age/5)])));
+                  setDataUnchecked(gender,last_country_index,age,year,current_projection_id,Float.parseFloat(bits[7+(age/5)]));
                 }
               }
             } else {
               for (int age=0; age<=100; age+=5) {
-                setDataUnchecked(gender,last_country_index,age,year,current_projection_id,(int)(1000.0f*Float.parseFloat(bits[6+(age/5)])));
+                setDataUnchecked(gender,last_country_index,age,year,current_projection_id,Float.parseFloat(bits[6+(age/5)]));
               }
             
             }
