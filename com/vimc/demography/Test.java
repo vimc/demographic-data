@@ -63,8 +63,8 @@ public class Test {
     System.out.println("GBR, male, 2050, 25, med = "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
                                                                com.vimc.demography.unwpp2017.Population.MEDIUM_VARIANT,2050));
     System.out.println("GBR, male, 2050, 25, high= "+p2017.get(25,"GBR", com.vimc.demography.unwpp2017.Population.MALE, 
-                                                              com.vimc.demography.unwpp2017.Population.HIGH_VARIANT,2050));
-    // And some dump examples.
+                                                               com.vimc.demography.unwpp2017.Population.HIGH_VARIANT,2050));
+    // And some dump examples. 
    
     
     ip2017.dump(System.out,new String[] {"PAK","IND","ETH","NIG","COD"}); // Pine countries.
