@@ -6,9 +6,6 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
-import com.vimc.demography.tools.Tools;
 
 public class MontaguDB {
   
@@ -75,11 +72,11 @@ public class MontaguDB {
     try {
       Statement stmt = c.createStatement();
       try { // Drop it if it already exists
-        stmt.execute("DROP TABLE "+name);
+        stmt.execute("DROP TABLE \""+name+"\"");
       } catch (Exception e) {}
       int max=0;
       for (int i=0; i<entries.length; i++) max=Math.max(max, entries[i].length());
-      stmt.executeUpdate("CREATE TABLE "+name+" (id int NOT NULL UNIQUE, name varchar("+max+") NOT NULL)");
+      stmt.executeUpdate("CREATE TABLE \""+name+"\" (\"id\" INTEGER NOT NULL UNIQUE, \"name\" TEXT NOT NULL, PRIMARY KEY (\"id\"));");
       for (int i=0; i<entries.length; i++) 
         stmt.executeUpdate("INSERT INTO "+name+" (id,name) VALUES ("+i+",'"+entries[i]+"')");
       stmt.close();      
@@ -87,26 +84,51 @@ public class MontaguDB {
   }
   
   private void createGendersTable() {
-    createGenericIDTable("gender",genders);
+    try {
+      Statement stmt = c.createStatement();
+      try { // Drop it if it already exists
+        stmt.execute("DROP TABLE \"gender\"");
+      } catch (Exception e) {}
+      stmt.executeUpdate("CREATE TABLE \"gender\" ( \"id\" TEXT NOT NULL , \"name\" VARCHAR(6) NOT NULL , PRIMARY KEY (\"id\"));");
+      for (int i=0; i<genders.length; i++) stmt.executeUpdate("INSERT INTO \"gender\" (id,name) VALUES ('"+i+"','"+genders[i]+"');");
+      stmt.close();      
+    } catch (Exception e) { e.printStackTrace(); }
   }
   
   private void createProjectionsTable() {
     createGenericIDTable("projection_variant",projections);
+    try {
+      Statement stmt = c.createStatement();
+      try { // Drop it if it already exists
+        stmt.execute("DROP TABLE \"projection_variant\"");
+      } catch (Exception e) {}
+      stmt.executeUpdate("CREATE TABLE \"projection_variant\" ( \"id\" SERIAL , \"name\" VARCHAR NOT NULL DEFAULT 'NULL', PRIMARY KEY (\"id\"));");
+      for (int i=0; i<projections.length; i++) stmt.executeUpdate("INSERT INTO \"projection_variant\" (id,name) VALUES ("+i+",'"+projections[i]+"');");
+      stmt.close();      
+    } catch (Exception e) { e.printStackTrace(); }
   }
    
   private void createSourcesTable() {
-    createGenericIDTable("source",sources);
+    try {
+      Statement stmt = c.createStatement();
+      try { // Drop it if it already exists
+        stmt.execute("DROP TABLE \"source\"");
+      } catch (Exception e) {}
+      stmt.executeUpdate("CREATE TABLE \"source\" ( \"id\" TEXT NOT NULL , \"name\" VARCHAR NOT NULL , PRIMARY KEY (\"id\"));");
+      for (int i=0; i<sources.length; i++) stmt.executeUpdate("INSERT INTO \"source\" (id,name) VALUES ('"+i+"','"+sources[i]+"');");
+      stmt.close();      
+    } catch (Exception e) { e.printStackTrace(); }
   }
   
   private void createDataTypesTable() {
     try {
       Statement stmt = c.createStatement();
       try { // Drop it if it already exists
-        stmt.execute("DROP TABLE demographic_statistic_type");
+        stmt.execute("DROP TABLE \"demographic_statistic_type\"");
       } catch (Exception e) {}
-      stmt.executeUpdate("CREATE TABLE demographic_statistic_type (id int NOT NULL UNIQUE, age_interpretation varchar(50), name varchar(50))");
+      stmt.executeUpdate("CREATE TABLE demographic_statistic_type (\"id\" TEXT NOT NULL, \"age_interpretation\" TEXT NOT NULL, \"name\" VARCHAR NOT NULL, PRIMARY KEY (\"id\"));");
       for (int i=0; i<demographic_statistic_types.length; i++)
-        stmt.executeUpdate("INSERT INTO demographic_statistic_type (id,age_interpretation,name) VALUES ("+i+",'"+demographic_statistic_age_inf[i]+"', '"+demographic_statistic_types+"')");
+        stmt.executeUpdate("INSERT INTO demographic_statistic_type (id,age_interpretation,name) VALUES ('"+i+"','"+demographic_statistic_age_inf[i]+"', '"+demographic_statistic_types[i]+"')");
       stmt.close();        
     } catch (Exception e) { e.printStackTrace(); }
   }
@@ -116,10 +138,10 @@ public class MontaguDB {
     try {
       Statement stmt = c.createStatement();
       try { // Drop it if it already exists
-        stmt.execute("DROP TABLE demographic_statistic");
+        stmt.execute("DROP TABLE \"demographic_statistic\"");
       } catch (Exception e) {}
-      stmt.executeUpdate("CREATE TABLE demographic_statistic (id SERIAL, age_from int, age_to int, value real, date_start int, "+
-                         "date_end int, projection_variant int, gender int, country int, source int, demographic_statistic_type int)");
+      stmt.executeUpdate("CREATE TABLE \"demographic_statistic\" (\"id\" SERIAL, \"age_from\" INTEGER NOT NULL, \"age_to\" INTEGER, \"value\" DECIMAL NOT NULL, \"date_start\" DATE NOT NULL, "+
+                         "\"date_end\" DATE NOT NULL, \"projection_variant\" INTEGER, \"gender\" TEXT NOT NULL, \"country\" TEXT NOT NULL, \"source\" TEXT NOT NULL, \"demographic_statistic_type\" TEXT NOT NULL, PRIMARY KEY (\"id\"));");
       stmt.close();
     } catch (Exception e) { e.printStackTrace(); }
   }
@@ -164,7 +186,7 @@ public class MontaguDB {
       try { // Drop it if it already exists
         stmt.execute("DROP TABLE iso3166");
       } catch (Exception e) {}
-      stmt.executeUpdate("CREATE TABLE iso3166 (id int, c3 varchar(3), name varchar(255))");
+     /* stmt.executeUpdate("CREATE TABLE iso3166 (id int, c3 varchar(3), name varchar(255))");
       int countTags = Tools.countChildren(iso3166, "c");
       for (int i=0; i<countTags; i++) {
         Node n = Tools.getChildNo(iso3166,"c",i);
@@ -172,17 +194,18 @@ public class MontaguDB {
         cname=cname.replace("'","`");
         stmt.executeUpdate("INSERT INTO iso3166 (id,c3,name) VALUES ("+Integer.parseInt(Tools.getAttribute(n,"n3"))+",'"+Tools.getAttribute(n, "c3")+"','"+cname+"')");
       }
+      */
       stmt.close();
     } catch (Exception e) { e.printStackTrace(); }
-    
+
     
   }
   
   public void test() throws Exception {
     Statement stmt = c.createStatement();
-    ResultSet rs = stmt.executeQuery("SELECT * from iso3166");
+    ResultSet rs = stmt.executeQuery("SELECT * from demographic_statistic WHERE id=1");
     while (rs.next()) {
-      System.out.println(rs.getString("name")+","+rs.getString("c3")+","+rs.getInt("id"));
+      System.out.println(rs.getString("country")+","+rs.getFloat("value"));
     }
     rs.close();
     stmt.close();
