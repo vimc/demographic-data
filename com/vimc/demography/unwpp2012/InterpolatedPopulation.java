@@ -193,26 +193,26 @@ public class InterpolatedPopulation {
         if (pick_country) {
           System.out.println("2012 ipop: "+i3+" "+country_a3.get(i));    
           for (byte g=0; g<no_genders; g++) {
-            int gg = (g==0)?MontaguDB.GENDER_BOTH:(g==1)?MontaguDB.GENDER_MALE:MontaguDB.GENDER_FEMALE;
+            String gg = (g==0)?MontaguDB.gender_ids[MontaguDB.GENDER_BOTH]:(g==1)?MontaguDB.gender_ids[MontaguDB.GENDER_MALE]:MontaguDB.gender_ids[MontaguDB.GENDER_FEMALE];
             for (int y=1950; y<=1989; y++) {
               for (int a=0; a<=79; a++) {
                 stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
-                                   a+","+a+","+get(a,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30',"+MontaguDB.UNWPP_ESTIMATES+",'"+gg+"','"+c3+"','"+MontaguDB.INTERPOLATED_POPULATION+"','"+MontaguDB.UNWPP_2012+"')");
+                                   a+","+a+","+get(a,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30','"+MontaguDB.projection_ids[MontaguDB.UNWPP_ESTIMATES]+"','"+gg+"','"+c3+"','"+MontaguDB.demographic_statistic_types_ids[MontaguDB.INT_POP]+"','"+MontaguDB.source_ids[MontaguDB.UNWPP_2012]+"')");
               
               }
               stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
-                  "80,120,"+get(80,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30',"+MontaguDB.UNWPP_ESTIMATES+",'"+gg+"','"+c3+"','"+MontaguDB.INTERPOLATED_POPULATION+"','"+MontaguDB.UNWPP_2012+"')");
+                  "80,120,"+get(80,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30','"+MontaguDB.projection_ids[MontaguDB.UNWPP_ESTIMATES]+"','"+gg+"','"+c3+"','"+MontaguDB.demographic_statistic_types_ids[MontaguDB.INT_POP]+"','"+MontaguDB.source_ids[MontaguDB.UNWPP_2012]+"')");
 
             }
             for (int y=1990; y<=2100; y++) {
-              int proj=(y<=2015)?MontaguDB.UNWPP_ESTIMATES:MontaguDB.UNWPP_MEDIUM;
+              String proj=(y<=2015)?MontaguDB.projection_ids[MontaguDB.UNWPP_ESTIMATES]:MontaguDB.projection_ids[MontaguDB.UNWPP_MEDIUM];
               for (int a=0; a<=99; a++) {
                 stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
-                    a+","+a+","+get(a,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30',"+proj+",'"+gg+"','"+c3+"','"+MontaguDB.INTERPOLATED_POPULATION+"','"+MontaguDB.UNWPP_2012+"')");
+                    a+","+a+","+get(a,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30','"+proj+"','"+gg+"','"+c3+"','"+MontaguDB.demographic_statistic_types_ids[MontaguDB.INT_POP]+"','"+MontaguDB.source_ids[MontaguDB.UNWPP_2012]+"')");
 
               }
               stmt.executeUpdate("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ("+
-                  "100,120,"+get(100,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30',"+proj+",'"+gg+"','"+c3+"','"+MontaguDB.INTERPOLATED_POPULATION+"','"+MontaguDB.UNWPP_2012+"')");
+                  "100,120,"+get(100,i3,g,y)+",'"+y+"-07-01','"+(y+1)+"-06-30','"+proj+"','"+gg+"','"+c3+"','"+MontaguDB.demographic_statistic_types_ids[MontaguDB.INT_POP]+"','"+MontaguDB.source_ids[MontaguDB.UNWPP_2012]+"')");
             }
           }
         }
