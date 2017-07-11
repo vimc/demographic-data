@@ -98,7 +98,7 @@ process_interpolated_population <- function(db, xlfile, gender, sheets,
     age_cols_pre_1990 <- as.character(c(0:79,"80+"))
     
     # Hack because column "100+" has been renamed to "100" in UNWPP 2017.
-    if (is.null(xl$"100+")) {
+    if ("100+" %in% colnames(xl)) {
       age_cols_from_1990 <- as.character(c(0:100))
     } else {
       age_cols_from_1990 <- as.character(c(0:99,"100+"))
@@ -135,17 +135,17 @@ process_all_interpolated_population <- function(db, iso3166) {
   sheet_names_2012 <- c("ESTIMATES","MEDIUM FERTILITY")
 
   #2015
-#  process_interpolated_population(db,
-#                                  "data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS",
-#                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2015", iso3166)
+  process_interpolated_population(db,
+                                  "data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS",
+                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2015", iso3166)
 
-#  process_interpolated_population(db,
-#                                  "data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS",
-#                                  "MALE", sheet_names_2015, variant_names, "UNWPP_2015",iso3166)
+  process_interpolated_population(db,
+                                  "data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS",
+                                  "MALE", sheet_names_2015, variant_names, "UNWPP_2015",iso3166)
 
-#  process_interpolated_population(db,
-#                                  "data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS",
-#                                  "FEMALE", sheet_names_2015, variant_names, "UNWPP_2015",iso3166)
+  process_interpolated_population(db,
+                                  "data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS",
+                                  "FEMALE", sheet_names_2015, variant_names, "UNWPP_2015",iso3166)
 
 
   #2017
