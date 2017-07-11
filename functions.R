@@ -1,9 +1,22 @@
 init_country_table <- function(db,iso3166) {
-  dbExecute(db, "DELETE FROM country")
+  DBI::dbExecute(db,"DELETE FROM country")
   country <- data.frame(id = iso3166$code,
                         name = iso3166$code,
                         stringsAsFactors = FALSE)
   DBI::dbWriteTable(db, "country", country, append = TRUE)
+}
+
+empty_tables <- function(db) {
+  rs<-DBI::dbSendStatement(db,"DELETE FROM demographic_statistic");
+  rs<-dbClearResult(rs)
+  rs<-DBI::dbSendStatement(db,"DELETE FROM gender");  
+  rs<-dbClearResult(rs)
+  rs<-DBI::dbSendStatement(db,"DELETE FROM projection_variant");
+  rs<-dbClearResult(rs)
+  rs<-DBI::dbSendStatement(db,"DELETE FROM source");
+  rs<-dbClearResult(rs)
+  rs<-DBI::dbSendStatement(db,"DELETE FROM demographic_statistic_type");
+  rs<-dbClearResult(rs)
 }
 
 init_tables <- function(db) {
@@ -45,15 +58,15 @@ download_data <- function() {
   if (!file.exists('data/wpp2012')) dir.create('data/wpp2012')
   if (!file.exists('data/wpp2015')) dir.create('data/wpp2015')
   if (!file.exists('data/wpp2017')) dir.create('data/wpp2017')
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS","data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS","data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS","data/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls","data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls","data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xls","data/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS")
   download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS","data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS")
   download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS","data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS")
   download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS","data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLSX","data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLSX")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLSX","data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLSX")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLSX","data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLSX")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xlsx","data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLSX")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xlsx","data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLSX")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xlsx","data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLSX")
   download_single("https://mrcdata.dide.ic.ac.uk/resources/iso3166.xml","data/iso3166.xml")
 }
 
@@ -77,6 +90,10 @@ process_interpolated_population <- function(db, xlfile, gender, sheets,
                value = value)
   }
   read_sheet <- function(sheet, variant) {
+    
+    age_cols_pre_1990 <- as.character(c(0:79,"80+"))
+    age_cols_from_1990 <- as.character(c(0:99,"100+"))
+    
     message(sprintf("Reading %s:%s", xlfile, sheet))
     xl <- read_excel(xlfile, sheet = sheet, skip = 16, col_names = TRUE,
                      na = c("", "…"))
@@ -91,6 +108,10 @@ process_interpolated_population <- function(db, xlfile, gender, sheets,
     res$projection_variant <- variant
     res$date_start <- sprintf("%d-07-01", res$year)
     res$date_end <- sprintf("%d-06-30", res$year + 1)
+    res$year<-NULL
+    res$gender<-gender
+    res$source<-source
+    res$demographic_statistic_type<-"INT_POP"
     res
   }
 
@@ -120,17 +141,17 @@ process_all_interpolated_population <- function(db, iso3166) {
 
 
   #2017
-#  process_interpolated_population(db,
-#                                  "data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xlsx",
-#                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
+  process_interpolated_population(db,
+                                  "data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLSX",
+                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
 
-#  process_interpolated_population(db,
-#                                  "data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xlsx",
-#                                  "MALE", sheet_names_2015,variant_names, "UNWPP_2017", iso3166)
+  process_interpolated_population(db,
+                                  "data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLSX",
+                                  "MALE", sheet_names_2015,variant_names, "UNWPP_2017", iso3166)
 
-#  process_interpolated_population(db,
-#                                  "data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xlsx",
-#                                  "FEMALE", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
+  process_interpolated_population(db,
+                                  "data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLSX",
+                                  "FEMALE", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
 
 
   #2012
