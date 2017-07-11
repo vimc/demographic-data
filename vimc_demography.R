@@ -69,70 +69,92 @@ download_data <- function() {
 }
 
 process_interpolated_population <- function(db, xlfile, gender, sheets, variant_names,source, iso3166) {
+  print(sprintf("Processing %s",xlfile))
   
-  big_frame <- data.frame(age_from = integer(0),
-                          age_to = integer(0),
-                          value = numeric(0),
-                          date_start = character(0),
-                          date_end = character(0),
-                          projection_variant = character(0),
-                          gender= character(0),
-                          country = character(0),
-                          demographic_statistic_type = character(0),
-                          source = character(0),
+  age_cols_pre_1990  <- as.character(c(0:79,"80+"))
+  age_cols_from_1990 <- as.character(c(0:99,"100+"))
+  age1_pre_1990  <- c(0L:80L)
+  age2_pre_1990    <- c(0L:79L,120L)
+  age1_from_1990 <- c(0L:100L)
+  age2_from_1990   <- c(0L:99L,120L)
+
+  #97 countries, 3 genders, (40 years of 81 ages), (112 years of 101 ages)
+  alloc  <- 97 * 3 * ((40*81)+(112*101))
+  print("Pre-allocation")
+  
+  df_age_from <- rep(1L,alloc)
+  df_age_to <- rep(1L,alloc)
+  df_value <- rep(1.0,alloc)
+  df_date_start <- rep('yyyy-mm-dd',alloc)
+  df_date_end <- rep('yyyy-mm-dd',alloc)
+  df_projection <- rep('MEDIUM_VARIANT',alloc)
+  df_gender <- rep('FEMALE',alloc)
+  df_country <- rep('ZZZ',alloc)
+  df_type <- rep('INT_POP',alloc)
+  df_source <- rep(source,alloc)
+
+  print("Build frame")
+  
+  big_frame <- data.frame(age_from = df_age_from,
+                          age_to = df_age_to,
+                          value = df_value,
+                          date_start = df_date_start,
+                          date_end = df_date_end,
+                          projection_variant = df_projection,
+                          gender= df_gender,
+                          country = df_country,
+                          demographic_statistic_type = df_type,
+                          source = df_source,
                           stringsAsFactors=FALSE)
   
-  for (sheet in 1:length(sheets)) {
+  db_rowno <- 1
+  sheet_no <- 0
+  
+  while (sheet_no<length(sheets)) {
+    sheet_no<-sheet_no+1
+    print(sprintf("Sheet %d",sheet_no))
+    
+    variant_pre_1990  <- rep(sheets[sheet_no],81)
+    variant_from_1990 <- rep(sheets[sheet_no],101)
+    
     # Add ISO3 column to XLS and select only the countries we want
     
-    xl <- read_excel(xlfile, sheet=sheets[sheet], skip=16, col_names=TRUE)
+    xl <- read_excel(xlfile, sheet=sheets[sheet_no], skip=16, col_names=TRUE)
     select_countries <- match(xl$"Country code", iso3166$id)
     xl$iso3 <- iso3166$code[select_countries]
     j <- !is.na(xl$iso3)
     xl_subset<-as.data.frame(xl[j, ])
     
-    age_cols_pre_1990 <- as.character(c(0:79,"80+"))
-    age_cols_from_1990 <- as.character(c(0:99,"100+"))
-    
-    
-    for (rowno in 1:nrow(xl_subset)) {
-      ## Change column 6 to something better
+    rowno<-0
+    while (rowno<nrow(xl_subset)) {
+      rowno<-rowno+1
+      if ((rowno %% 100)==0) print(sprintf("Row %d/%d",rowno,nrow(xl_subset)))
+      
+      # Change column 6 to something better
       year<-xl_subset[rowno,6]
       
       # Each excel row is either 81, or 101 db rows, depending on year.
       
       if (year<1990) {
-        age_from   <- c(0:80)
-        age_to     <- c(0:79,120)
-        values     <- unname(unlist(as.numeric(xl_subset[rowno,age_cols_pre_1990])))
-      } else {
-        age_from   <- c(0:100)
-        age_to     <- c(0:99,120)
-        values     <- unname(unlist(as.numeric(xl_subset[rowno,age_cols_from_1990])))
-      }
+        big_frame$age_from[db_rowno:(db_rowno+80)]     <- age1_pre_1990
+        big_frame$age_to[db_rowno:(db_rowno+80)]       <- age2_pre_1990
+        big_frame$value[db_rowno:(db_rowno+80)]        <- unname(unlist(as.numeric(xl_subset[rowno,age_cols_pre_1990])))
+        big_frame$date_start[db_rowno:(db_rowno+80)]   <- rep(paste(as.character(year),"-07-01",sep=""),81)
+        big_frame$date_end[db_rowno:(db_rowno+80)]     <- rep(paste(as.character(year+1),"-06-30",sep=""),81)
+        big_frame$projection_variant[db_rowno:(db_rowno+80)]  <- variant_pre_1990
+        big_frame$country[db_rowno:(db_rowno+80)]             <- rep(xl_subset[rowno,"iso3"],81)
+        db_rowno<-(db_rowno+81)
         
-      date_from  <- rep(paste(as.character(year),"-07-01",sep=""),length(age_from))
-      date_to    <- rep(paste(as.character(year+1),"-06-30",sep=""),length(age_from))
-      projection <- rep(variant_names[sheet],length(age_from))
-      df_gender  <- rep(gender,length(age_from))
-      country    <- rep(xl_subset[rowno,"iso3"],length(age_from))
-      dstype     <- rep("INT_POP",length(age_from))
-      df_source  <- rep(source,length(age_from))
-      
-      big_frame <- rbind(big_frame, data.frame(
-                              age_from = age_from,
-                              age_to = age_to,
-                              value = values,
-                              date_start = date_from,
-                              date_end = date_to,
-                              projection_variant = projection,
-                              gender= df_gender,
-                              country = country,
-                              demographic_statistic_type = dstype,
-                              source = df_source,
-                              stringsAsFactors=FALSE)
-      )
-
+      } else {
+        big_frame$age_from[db_rowno:(db_rowno+100)]    <- age1_from_1990
+        big_frame$age_to[db_rowno:(db_rowno+100)]      <- age2_from_1990
+        big_frame$value[db_rowno:(db_rowno+100)]       <- unname(unlist(as.numeric(xl_subset[rowno,age_cols_from_1990])))
+        big_frame$date_start[db_rowno:(db_rowno+100)]  <- rep(paste(as.character(year),"-07-01",sep=""),101)
+        big_frame$date_end[db_rowno:(db_rowno+100)]    <- rep(paste(as.character(year+1),"-06-30",sep=""),101)
+        big_frame$projection_variant[db_rowno:(db_rowno+100)]  <- variant_from_1990
+        big_frame$country[db_rowno:(db_rowno+100)]             <- rep(xl_subset[rowno,"iso3"],101)
+        db_rowno<-(db_rowno+101)
+      }
     }
   }
   dbWriteTable(db, "demographic_statistic", big_frame, append=TRUE)
@@ -159,17 +181,17 @@ process_all_interpolated_population <- function(db, iso3166) {
   
   
   #2017
-  process_interpolated_population(db,
-                                  "data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xlsx",
-                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
+#  process_interpolated_population(db,
+#                                  "data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xlsx",
+#                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
   
-  process_interpolated_population(db,
-                                  "data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xlsx",
-                                  "MALE", sheet_names_2015,variant_names, "UNWPP_2017", iso3166)
+#  process_interpolated_population(db,
+#                                  "data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xlsx",
+#                                  "MALE", sheet_names_2015,variant_names, "UNWPP_2017", iso3166)
   
-  process_interpolated_population(db,
-                                  "data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xlsx",
-                                  "FEMALE", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
+#  process_interpolated_population(db,
+#                                  "data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xlsx",
+#                                  "FEMALE", sheet_names_2015, variant_names, "UNWPP_2017", iso3166)
   
   
   #2012
@@ -206,10 +228,8 @@ countries_97 <- c("AFG","ALB","AGO","ARM","AZE","BGD","BLZ","BEN","BTN","BOL","B
 
 iso3166 <- read_xml("data/iso3166.xml")
 xml_countries <- xml2::xml_find_all(iso3166, "//c")
-xml_n3 <- xml2::xml_attr(xml_countries, "n3")
-xml_c3 <- xml2::xml_attr(xml_countries, "c3")
-iso3166_df<- data.frame(id = as.numeric(xml_n3), 
-                        code = xml_c3, 
+iso3166_df<- data.frame(id = as.numeric(xml2::xml_attr(xml_countries, "n3")), 
+                        code = xml2::xml_attr(xml_countries, "c3"), 
                         stringsAsFactors = FALSE)
 
 # Filter to only include countries we care about.
