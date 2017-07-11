@@ -10,7 +10,7 @@ init_tables <- function(db) {
   gender_table <- data.frame(c("BOTH","MALE","FEMALE"),
                              c("Both","Male","Female"))
   colnames(gender_table) <- c("id","name")
-  dbWriteTable(db,"gender",gender_table, append=TRUE)
+  DBI::dbWriteTable(db,"gender",gender_table, append=TRUE)
 
 
   projection_table <- data.frame(c("ESTIMATES","MEDIUM_VARIANT","HIGH_VARIANT","LOW_VARIANT","CONSTANT_FERTILITY",
@@ -19,20 +19,20 @@ init_tables <- function(db) {
                                    "Instant Replacement","Momentum","Zero Migration","Constant Mortality","No Change"))
   colnames(projection_table) <- c("id","name")
 
-  dbWriteTable(db,"projection_variant",projection_table, append=TRUE)
+  DBI::dbWriteTable(db,"projection_variant",projection_table, append=TRUE)
 
 
   demographic_statistic_type_table <- data.frame(c("INT_POP"),c("Age (years)"),c("Interpolated Population"))
   colnames(demographic_statistic_type_table) <- c("id","age_interpretation","name")
 
-  dbWriteTable(db,"demographic_statistic_type",demographic_statistic_type_table, append=TRUE)
+  DBI::dbWriteTable(db,"demographic_statistic_type",demographic_statistic_type_table, append=TRUE)
 
 
   source_table <- data.frame(c("UNWPP_2012","UNWPP_2015","UNWPP_2017"),
                              c("UNWPP 2012","UNWPP 2015","UNWPP 2017"))
   colnames(source_table) <- c("id","name")
 
-  dbWriteTable(db,"source",source_table, append=TRUE)
+  DBI::dbWriteTable(db,"source",source_table, append=TRUE)
 }
 
 
@@ -45,110 +45,60 @@ download_data <- function() {
   if (!file.exists('data/wpp2012')) dir.create('data/wpp2012')
   if (!file.exists('data/wpp2015')) dir.create('data/wpp2015')
   if (!file.exists('data/wpp2017')) dir.create('data/wpp2017')
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls","data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls","data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xls","data/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xls")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls","data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls","data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xls","data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xlsx","data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xlsx")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xlsx","data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xlsx")
-  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xlsx","data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xlsx")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS","data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS","data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS","data/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS","data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS","data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS","data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLSX","data/wpp2017/WPP2017_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLSX")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLSX","data/wpp2017/WPP2017_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLSX")
+  download_single("https://mrcdata.dide.ic.ac.uk/resources/unwpp/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLSX","data/wpp2017/WPP2017_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLSX")
   download_single("https://mrcdata.dide.ic.ac.uk/resources/iso3166.xml","data/iso3166.xml")
 }
 
-process_interpolated_population <- function(db, xlfile, gender, sheets, variant_names,source, iso3166) {
-  print(sprintf("Processing %s",xlfile))
-
-  age_cols_pre_1990  <- as.character(c(0:79,"80+"))
-  age_cols_from_1990 <- as.character(c(0:99,"100+"))
-  age1_pre_1990  <- c(0L:80L)
-  age2_pre_1990    <- c(0L:79L,120L)
-  age1_from_1990 <- c(0L:100L)
-  age2_from_1990   <- c(0L:99L,120L)
-
-  #97 countries, 3 genders, (40 years of 81 ages), (112 years of 101 ages)
-  alloc  <- 97 * 3 * ((40*81)+(112*101))
-  print("Pre-allocation")
-
-  df_age_from <- rep(1L,alloc)
-  df_age_to <- rep(1L,alloc)
-  df_value <- rep(1.0,alloc)
-  df_date_start <- rep('yyyy-mm-dd',alloc)
-  df_date_end <- rep('yyyy-mm-dd',alloc)
-  df_projection <- rep('MEDIUM_VARIANT',alloc)
-  df_gender <- rep('FEMALE',alloc)
-  df_country <- rep('ZZZ',alloc)
-  df_type <- rep('INT_POP',alloc)
-  df_source <- rep(source,alloc)
-
-  print("Build frame")
-
-  big_frame <- data.frame(age_from = df_age_from,
-                          age_to = df_age_to,
-                          value = df_value,
-                          date_start = df_date_start,
-                          date_end = df_date_end,
-                          projection_variant = df_projection,
-                          gender= df_gender,
-                          country = df_country,
-                          demographic_statistic_type = df_type,
-                          source = df_source,
-                          stringsAsFactors=FALSE)
-
-  db_rowno <- 1
-  sheet_no <- 0
-
-  while (sheet_no<length(sheets)) {
-    sheet_no<-sheet_no+1
-    print(sprintf("Sheet %d",sheet_no))
-
-    variant_pre_1990  <- rep(sheets[sheet_no],81)
-    variant_from_1990 <- rep(sheets[sheet_no],101)
-
-    # Add ISO3 column to XLS and select only the countries we want
-
-    xl <- read_excel(xlfile, sheet=sheets[sheet_no], skip=16, col_names=TRUE)
-    select_countries <- match(xl$"Country code", iso3166$id)
-    xl$iso3 <- iso3166$code[select_countries]
-    j <- !is.na(xl$iso3)
-    xl_subset<-as.data.frame(xl[j, ])
-
-    rowno<-0
-    while (rowno<nrow(xl_subset)) {
-      rowno<-rowno+1
-      if ((rowno %% 100)==0) print(sprintf("Row %d/%d",rowno,nrow(xl_subset)))
-
-      # Change column 6 to something better
-      year<-xl_subset[rowno,6]
-
-      # Each excel row is either 81, or 101 db rows, depending on year.
-
-      if (year<1990) {
-        big_frame$age_from[db_rowno:(db_rowno+80)]     <- age1_pre_1990
-        big_frame$age_to[db_rowno:(db_rowno+80)]       <- age2_pre_1990
-        big_frame$value[db_rowno:(db_rowno+80)]        <- unname(unlist(as.numeric(xl_subset[rowno,age_cols_pre_1990])))
-        big_frame$date_start[db_rowno:(db_rowno+80)]   <- rep(paste(as.character(year),"-07-01",sep=""),81)
-        big_frame$date_end[db_rowno:(db_rowno+80)]     <- rep(paste(as.character(year+1),"-06-30",sep=""),81)
-        big_frame$projection_variant[db_rowno:(db_rowno+80)]  <- variant_pre_1990
-        big_frame$country[db_rowno:(db_rowno+80)]             <- rep(xl_subset[rowno,"iso3"],81)
-        db_rowno<-(db_rowno+81)
-
-      } else {
-        big_frame$age_from[db_rowno:(db_rowno+100)]    <- age1_from_1990
-        big_frame$age_to[db_rowno:(db_rowno+100)]      <- age2_from_1990
-        big_frame$value[db_rowno:(db_rowno+100)]       <- unname(unlist(as.numeric(xl_subset[rowno,age_cols_from_1990])))
-        big_frame$date_start[db_rowno:(db_rowno+100)]  <- rep(paste(as.character(year),"-07-01",sep=""),101)
-        big_frame$date_end[db_rowno:(db_rowno+100)]    <- rep(paste(as.character(year+1),"-06-30",sep=""),101)
-        big_frame$projection_variant[db_rowno:(db_rowno+100)]  <- variant_from_1990
-        big_frame$country[db_rowno:(db_rowno+100)]             <- rep(xl_subset[rowno,"iso3"],101)
-        db_rowno<-(db_rowno+101)
-      }
+process_interpolated_population <- function(db, xlfile, gender, sheets,
+                                            variant_names,source, iso3166) {
+  reshape <- function(x, cols) {
+    age_to <- age_from <- seq_along(cols) - 1L
+    age_to[length(age_to)] <- 120L
+    nr <- nrow(x)
+    nc <- length(cols)
+    if (nrow(x) == 0) {
+      ## This avoids indexing by non-existant columns
+      value <- numeric(0)
+    } else {
+      value <- unlist(x[cols], use.names = FALSE)
     }
+    data.frame(age_from = rep(age_from, each = nr),
+               age_to = rep(age_to, each = nr),
+               year = rep(x$year, nc),
+               country = x$iso3,
+               value = value)
   }
-  dbWriteTable(db, "demographic_statistic", big_frame, append=TRUE)
-}
+  read_sheet <- function(sheet, variant) {
+    message(sprintf("Reading %s:%s", xlfile, sheet))
+    xl <- read_excel(xlfile, sheet = sheet, skip = 16, col_names = TRUE,
+                     na = c("", "…"))
+    message("...processing")
+    xl$iso3 <- iso3166$code[match(xl$"Country code", iso3166$id)]
+    xl <- as.data.frame(xl[!is.na(xl$iso3), ])
+    xl$year <- xl[[6]]
 
+    res <- rbind(reshape(xl[xl$year < 1990, ], age_cols_pre_1990),
+                 reshape(xl[xl$year >= 1990, ], age_cols_from_1990))
+    row.names(res) <- NULL
+    res$projection_variant <- variant
+    res$date_start <- sprintf("%d-07-01", res$year)
+    res$date_end <- sprintf("%d-06-30", res$year + 1)
+    res
+  }
+
+  for (i in seq_along(sheets)) {
+    x <- read_sheet(sheets[[i]], variant_names[[i]])
+    dbWriteTable(db, "demographic_statistic", x, append = TRUE)
+  }
+}
 
 process_all_interpolated_population <- function(db, iso3166) {
   variant_names <- c("ESTIMATES","MEDIUM_VARIANT")
@@ -157,15 +107,15 @@ process_all_interpolated_population <- function(db, iso3166) {
 
   #2015
   process_interpolated_population(db,
-                                  "data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls",
+                                  "data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS",
                                   "BOTH", sheet_names_2015, variant_names, "UNWPP_2015", iso3166)
 
   process_interpolated_population(db,
-                                  "data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls",
+                                  "data/wpp2015/WPP2015_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS",
                                   "MALE", sheet_names_2015, variant_names, "UNWPP_2015",iso3166)
 
   process_interpolated_population(db,
-                                  "data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xls",
+                                  "data/wpp2015/WPP2015_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS",
                                   "FEMALE", sheet_names_2015, variant_names, "UNWPP_2015",iso3166)
 
 
@@ -185,15 +135,23 @@ process_all_interpolated_population <- function(db, iso3166) {
 
   #2012
   process_interpolated_population(db,
-                                  "data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.xls",
+                                  "data/wpp2012/WPP2012_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS",
                                   "BOTH",sheet_names_2012, variant_names, "UNWPP_2012",iso3166)
 
   process_interpolated_population(db,
-                                  "data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.xls",
+                                  "data/wpp2012/WPP2012_INT_F03_2_POPULATION_BY_AGE_ANNUAL_MALE.XLS",
                                   "MALE",sheet_names_2012, variant_names, "UNWPP_2012",iso3166)
 
   process_interpolated_population(db,
-                                  "data/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.xls",
+                                  "data/wpp2012/WPP2012_INT_F03_3_POPULATION_BY_AGE_ANNUAL_FEMALE.XLS",
                                   "FEMALE",sheet_names_2012, variant_names, "UNWPP_2012",iso3166)
 
+}
+
+read_excel <- function(...) {
+  oo <- options(warnPartialMatchArgs = FALSE)
+  if (!is.null(oo$warnPartialMatchArgs)) {
+    on.exit(options(oo))
+  }
+  readxl::read_excel(...)
 }

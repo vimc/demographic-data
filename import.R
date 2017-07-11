@@ -24,11 +24,23 @@ db <- DBI::dbConnect(RPostgres::Postgres(),
                       password = "changeme",
                       user = "vimc")
 
-# Initialise the enum tables
-init_tables(db)
+## # Initialise the enum tables
+## init_tables(db)
 
-# Only do this on test DB if country table isn't already populated.
-#init_country_table(db,iso3166_df)
+## # Only do this on test DB if country table isn't already populated.
+## init_country_table(db,iso3166_df)
+
+source("functions.R")
+
+variant_names <- c("ESTIMATES","MEDIUM_VARIANT")
+sheet_names_2015 <- c("ESTIMATES","MEDIUM VARIANT")
+sheet_names_2012 <- c("ESTIMATES","MEDIUM FERTILITY")
+
+#2015
+ans <- process_interpolated_population(db,
+                                  "data/wpp2015/WPP2015_INT_F03_1_POPULATION_BY_AGE_ANNUAL_BOTH_SEXES.XLS",
+                                  "BOTH", sheet_names_2015, variant_names, "UNWPP_2015", iso3166_df)
+
 
 process_all_interpolated_population(db, iso3166_df_97)
 
