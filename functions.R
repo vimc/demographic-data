@@ -1,11 +1,9 @@
 init_country_table <- function(db,iso3166) {
-  #Not sure if this is necessary on main DB
-  #Perhaps just for my test...
-  for (i in 1:nrow(iso3166)) {
-    sql <- sprintf("INSERT INTO country (id,name) VALUES ('%s','%s');",
-                   iso3166[i,"code"],iso3166[i,"code"]);
-    dbExecute(db,sql)
-  }
+  dbExecute(db, "DELETE FROM country")
+  country <- data.frame(id = iso3166$code,
+                        name = iso3166$code,
+                        stringsAsFactors = FALSE)
+  DBI::dbWriteTable(db, "country", country, append = TRUE)
 }
 
 init_tables <- function(db) {
