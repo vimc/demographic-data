@@ -91,8 +91,8 @@ public class Test {
     Test t = new Test();
     //t.exampleTests();         // These are example point tests of the data.
     //t.d.InitNew(t.iso3166);   // THIS WILL DROP ALL THE DEMOGRAPHIC TABLES AND ISO3166.
-    t.d.populate(t.iso3166);  // THIS WILL ADD DATA TO THE DEMOGRAPHIC_STATISTIC and take about 3 hours. 
-    //t.d.test();                 // (this won't do much, and will take not much time)
+    //t.d.populate(t.iso3166);  // THIS WILL ADD DATA TO THE DEMOGRAPHIC_STATISTIC and take about 3 hours. 
+    t.d.test();                 // (this won't do much, and will take not much time)
    
   }
   

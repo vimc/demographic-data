@@ -155,11 +155,11 @@ public class MontaguDB {
   
   public void InitNew(Element iso3166) throws Exception {
     //  Drops and rebuilds all the demographic tables
+    createDataTable();
     createGendersTable();
     createProjectionsTable();
     createDataTypesTable();
     createSourcesTable();
-    createDataTable();
   }
   
   public void populate(Element iso3166) throws Exception {

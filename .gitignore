@@ -1,1 +1,6 @@
 data
+*.class
+.classpath
+.settings
+.project
+*.bak
