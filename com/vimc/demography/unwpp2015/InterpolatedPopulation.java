@@ -172,9 +172,10 @@ public class InterpolatedPopulation {
     }
   }
   
-  public void toSQL(Connection c, String[] filter_countries) {
+  public long[] toSQL(Connection c, String[] filter_countries) {
+    long[] times = new long[2];
     try {
-      Statement stmt = c.createStatement();
+      long b = -System.currentTimeMillis();
       StringBuffer huge_statement = new StringBuffer();
       huge_statement.append("INSERT INTO demographic_statistic (age_from,age_to,value,date_start,date_end,projection_variant,gender,country,demographic_statistic_type,source) values ");
       
@@ -192,7 +193,6 @@ public class InterpolatedPopulation {
         }
 
         if (pick_country) {
-          System.out.println("2015 ipop: "+i3+" "+country_a3.get(i));    
           for (byte g=0; g<no_genders; g++) {
             String gg = (g==0)?MontaguDB.gender_ids[MontaguDB.GENDER_BOTH]:(g==1)?MontaguDB.gender_ids[MontaguDB.GENDER_MALE]:MontaguDB.gender_ids[MontaguDB.GENDER_FEMALE];
             for (int y=1950; y<=1989; y++) {
@@ -218,10 +218,20 @@ public class InterpolatedPopulation {
           }
         }
       }
+      b+=System.currentTimeMillis();
+      times[0]=b;
+      
       huge_statement.setLength(huge_statement.length()-1); // Amputate last comma.
+      long sql=-System.currentTimeMillis();
+      Statement stmt = c.createStatement();
       stmt.executeUpdate(huge_statement.toString());
+      stmt.close();
+      sql+=System.currentTimeMillis();
+      times[1]=sql;
+      
       
     } catch (Exception e) { e.printStackTrace(); }
+    return times;
   }
   public void dump(PrintStream p, String[] filter_countries) {
     p.append("age_from,age_to,value,date_start,date_end,projection_variant,gender,country\n");

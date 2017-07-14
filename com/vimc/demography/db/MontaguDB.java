@@ -163,17 +163,28 @@ public class MontaguDB {
   }
   
   public void populate(Element iso3166) throws Exception {
+    long xls_time=0;
     long x = System.currentTimeMillis();
+    long start=x;
     com.vimc.demography.unwpp2015.InterpolatedPopulation ip2015 = new com.vimc.demography.unwpp2015.InterpolatedPopulation("data/wpp2015",iso3166);
-    ip2015.toSQL(c, countries_97);
-    com.vimc.demography.unwpp2012.InterpolatedPopulation ip2012 = new com.vimc.demography.unwpp2012.InterpolatedPopulation("data/wpp2012",iso3166);
-    ip2012.toSQL(c, countries_97);
-    com.vimc.demography.unwpp2017.InterpolatedPopulation ip2017 = new com.vimc.demography.unwpp2017.InterpolatedPopulation("data/wpp2017",iso3166);
-    ip2017.toSQL(c, countries_97);
-    long y = System.currentTimeMillis();
-    System.out.println("Done in "+(y-x)/1000.0f+" seconds");
+    xls_time+=System.currentTimeMillis()-x;
+    long[] times = ip2015.toSQL(c, countries_97);
     
-
+    x = System.currentTimeMillis();
+    com.vimc.demography.unwpp2012.InterpolatedPopulation ip2012 = new com.vimc.demography.unwpp2012.InterpolatedPopulation("data/wpp2012",iso3166);
+    xls_time+=System.currentTimeMillis()-x;
+    long[] times2 = ip2012.toSQL(c, countries_97);
+    
+    x = System.currentTimeMillis();
+    com.vimc.demography.unwpp2017.InterpolatedPopulation ip2017 = new com.vimc.demography.unwpp2017.InterpolatedPopulation("data/wpp2017",iso3166);
+    xls_time+=System.currentTimeMillis()-x;
+    long[] times3 = ip2017.toSQL(c, countries_97);
+    
+    long y = System.currentTimeMillis();
+    System.out.println("Done in "+(y-start)/1000.0f+" seconds");
+    System.out.println("Excel time: "+(xls_time/1000.f)+" seoncds");
+    System.out.println("Processing time: "+((times[0]+times2[0]+times3[0])/1000.f)+" seconds");
+    System.out.println("DB Query time: "+((times[1]+times2[1]+times3[1])/1000.f)+" seconds");
   }
   
   public void test() throws Exception {
